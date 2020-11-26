@@ -5,21 +5,19 @@ import {
 
 import { calculateStartTime } from './calculateStartTime';
 
-import { DecayCorrectionValue, UnitsValue, CorrectedImageValue } from './types';
-
 interface PhilipsPETPrivateGroup {
-  SUVScaleFactor: number | undefined; // 0x7053,0x1000)
+  SUVScaleFactor: number | undefined; // 0x7053,0x1000
   ActivityConcentrationScaleFactor: number | undefined; // 0x7053,0x1009
 }
 
 export interface SUVScalingFactorInput {
-  CorrectedImage: string[];
-  Units: UnitsValue; // Units (0x0054,0x1001)
+  CorrectedImage: string[]; // TODO: Add all options for CorrectedImage?
+  Units: string; // 'BQML' | 'CNTS' | 'GML'; // Units (0x0054,0x1001)
   RadionuclideHalfLife: number; // 	RadionuclideHalfLife(0x0018,0x1075)	in	Radiopharmaceutical	Information	Sequence(0x0054,0x0016)
   RadiopharmaceuticalStartTime?: string; // From the old version of the DICOM standard
   RadiopharmaceuticalStartDateTime?: string;
   TotalDose: number;
-  DecayCorrection: DecayCorrectionValue;
+  DecayCorrection: string; //'ADMIN' | 'START';
   PatientWeight: number;
   PhilipsPETPrivateGroup?: PhilipsPETPrivateGroup;
   seriesDateTimeAndAcquisitionTimePerInstance: SeriesDateTimeAndAcquisitionTimePerInstance[];
@@ -66,19 +64,16 @@ export default function calculateSUVScalingFactor(
 ): number {
   const { CorrectedImage, Units, PhilipsPETPrivateGroup } = inputs;
 
-  if (
-    !CorrectedImage.includes(CorrectedImageValue.ATTN) ||
-    !CorrectedImage.includes(CorrectedImageValue.DECY)
-  ) {
+  if (!CorrectedImage.includes('ATTN') || !CorrectedImage.includes('DECY')) {
     throw new Error(
       `CorrectedImage must contain "ATTN" and "DECY": ${CorrectedImage}`
     );
   }
 
-  if (Units === UnitsValue.BQML) {
+  if (Units === 'BQML') {
     // Need to get the reference time from the metadata for all instances in the series
     return _calculateBQMLScaleFactor(inputs);
-  } else if (Units === UnitsValue.CNTS) {
+  } else if (Units === 'CNTS') {
     if (
       PhilipsPETPrivateGroup?.SUVScaleFactor !== undefined &&
       PhilipsPETPrivateGroup?.SUVScaleFactor !== 0
@@ -100,7 +95,7 @@ export default function calculateSUVScalingFactor(
         `Units are in CNTS, but PhilipsPETPrivateGroup has invalid values: ${PhilipsPETPrivateGroup}`
       );
     }
-  } else if (Units === UnitsValue.GML) {
+  } else if (Units === 'GML') {
     // assumes that GML indicates SUVbw instead of SUVlbm
     return 1;
   } else {

@@ -14,6 +14,7 @@
     "start": "tsdx watch",
     "build": "tsdx build",
     "test": "tsdx test",
+    "coverage": "jest --collect-coverage",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",

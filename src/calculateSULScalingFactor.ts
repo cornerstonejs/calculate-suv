@@ -3,11 +3,9 @@ import {
   SUVScalingFactorInput,
 } from './calculateSUVScalingFactor';
 
-import { PatientSexValue } from './types';
-
-interface SULScalingFactorInput extends SUVScalingFactorInput {
+export interface SULScalingFactorInput extends SUVScalingFactorInput {
   PatientSize: number;
-  PatientSex: PatientSexValue;
+  PatientSex: string; //'M' | 'F';
 }
 
 export default function calculateSULScalingFactor(
@@ -16,11 +14,11 @@ export default function calculateSULScalingFactor(
   const { PatientSex, PatientWeight, PatientSize } = inputs;
 
   let sulFactor;
-  const bmi = PatientWeight / PatientSize ** 2;
-  if (PatientSex === PatientSexValue.F) {
-    sulFactor = 9270 / (8780 + 244 * bmi);
-  } else if (PatientSex === PatientSexValue.M) {
-    sulFactor = 9270 / (6680 + 216 * bmi);
+  const bodyMassIndex = PatientWeight / Math.pow(PatientSize, 2);
+  if (PatientSex === 'F') {
+    sulFactor = 9270 / (8780 + 244 * bodyMassIndex);
+  } else if (PatientSex === 'M') {
+    sulFactor = 9270 / (6680 + 216 * bodyMassIndex);
   } else {
     throw new Error(`PatientSex is an invalid value: ${PatientSex}`);
   }
