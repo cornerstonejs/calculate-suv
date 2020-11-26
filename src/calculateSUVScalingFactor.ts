@@ -79,14 +79,18 @@ export default function calculateSUVScalingFactor(
     // Need to get the reference time from the metadata for all instances in the series
     return _calculateBQMLScaleFactor(inputs);
   } else if (Units === UnitsValue.CNTS) {
-    if (PhilipsPETPrivateGroup?.SUVScaleFactor !== undefined) {
+    if (
+      PhilipsPETPrivateGroup?.SUVScaleFactor !== undefined &&
+      PhilipsPETPrivateGroup?.SUVScaleFactor !== 0
+    ) {
       return PhilipsPETPrivateGroup.SUVScaleFactor;
     } else if (
-      PhilipsPETPrivateGroup?.SUVScaleFactor === undefined &&
-      PhilipsPETPrivateGroup?.ActivityConcentrationScaleFactor !== undefined
+      !PhilipsPETPrivateGroup?.SUVScaleFactor &&
+      PhilipsPETPrivateGroup?.ActivityConcentrationScaleFactor !== undefined &&
+      PhilipsPETPrivateGroup?.ActivityConcentrationScaleFactor !== 0
     ) {
       // if (0x7053,0x1000) not present, but (0x7053,0x1009) is present, then (0x7053,0x1009) * Rescale Slope,
-      // scales pixels to	Bq/ml, and proceed as if Units are BQML
+      // scales pixels to Bq/ml, and proceed as if Units are BQML
       return (
         PhilipsPETPrivateGroup?.ActivityConcentrationScaleFactor *
         _calculateBQMLScaleFactor(inputs)
