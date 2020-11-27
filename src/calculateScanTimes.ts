@@ -56,13 +56,26 @@ export default function calculateScanTimes(
     throw new Error('Scan time could not be calculated.');
   }
 
-  if (seriesDateTime < earliestAcquisitionDateTime) {
+  if (seriesDateTime <= earliestAcquisitionDateTime) {
     return results.fill(seriesDateTime);
   } else {
     if (GEPrivatePostInjectionDateTime) {
       // GE Private scan
       return results.fill(dateTimeToJSDate(GEPrivatePostInjectionDateTime));
     } else {
+      const hasValidFrameTimes = instances.every(instance => {
+        return (
+          instance.FrameReferenceTime &&
+          instance.FrameReferenceTime > 0 &&
+          instance.ActualFrameDuration &&
+          instance.ActualFrameDuration > 0
+        );
+      });
+
+      if (!hasValidFrameTimes) {
+        return results.fill(earliestAcquisitionDateTime);
+      }
+
       /* Siemens PETsyngo	3.x	multi-injection logic
       - backcompute	from	center	(average	count	rate	)	of	time	window	for	bed	position	(frame)	in	series (reliable	in	all	cases)
       - Acquisition	Date	(0x0008,0x0022)	and	Time	(0x0008,0x0032) are	the	start	of	the	bed	position	(frame)
@@ -76,6 +89,8 @@ export default function calculateScanTimes(
           AcquisitionDate,
           AcquisitionTime,
         } = instance;
+        // Some of these checks are only here because the compiler is complaining
+        // We could potentially use the ! operator instead
         if (!FrameReferenceTime || FrameReferenceTime <= 0) {
           throw new Error(
             `FrameReferenceTime is invalid: ${FrameReferenceTime}`
@@ -119,7 +134,11 @@ export default function calculateScanTimes(
           Number(acquisitionDateTime) -
           FrameReferenceTime +
           averageCountRateTimeWithinFrameInSec;
-        return new Date(scanDateTimeAsNumber);
+
+        const scanDate = new Date(scanDateTimeAsNumber);
+        console.log('SIEMENS PATH');
+        console.log(new Date(scanDateTimeAsNumber));
+        return scanDate;
       });
     }
   }

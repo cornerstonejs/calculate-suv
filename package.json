@@ -47,7 +47,10 @@
   ],
   "devDependencies": {
     "@size-limit/preset-small-lib": "^4.9.0",
+    "dcmjs": "^0.16.6",
     "husky": "^4.3.0",
+    "nifti-js": "^1.0.1",
+    "nifti-reader-js": "^0.5.4",
     "size-limit": "^4.9.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.0.3",

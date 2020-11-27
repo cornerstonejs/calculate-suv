@@ -7,7 +7,7 @@ export interface InstanceMetadata {
   CorrectedImage: string[];
   Units: string; // 'BQML' | 'CNTS' | 'GML'; // Units (0x0054,0x1001)
   RadionuclideHalfLife: number; // 	RadionuclideHalfLife(0x0018,0x1075)	in	Radiopharmaceutical	Information	Sequence(0x0054,0x0016)
-  TotalDose: number;
+  RadionuclideTotalDose: number;
   DecayCorrection: string; //'ADMIN' | 'START';
   PatientWeight: number;
   SeriesDate: string;

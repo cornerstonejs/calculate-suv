@@ -12,7 +12,7 @@ interface ScalingFactorResult {
 
 function _calculateBQMLScaleFactor(instances: InstanceMetadata[]): number[] {
   const {
-    TotalDose,
+    RadionuclideTotalDose,
     RadionuclideHalfLife,
     RadiopharmaceuticalStartDateTime,
     RadiopharmaceuticalStartTime,
@@ -31,12 +31,27 @@ function _calculateBQMLScaleFactor(instances: InstanceMetadata[]): number[] {
     const scanTime = scanTimes[index];
     const decayTimeInSec: number =
       (scanTime.getTime() - startTime.getTime()) / 1000;
+    if (decayTimeInSec < 0) {
+      throw new Error('Decay time cannot be less than zero');
+    }
+
     const decayedDose: number =
-      TotalDose * Math.pow(2, -decayTimeInSec / RadionuclideHalfLife);
+      RadionuclideTotalDose *
+      Math.pow(2, -decayTimeInSec / RadionuclideHalfLife);
+
     const weightInGrams: number = PatientWeight * 1000;
 
     return weightInGrams / decayedDose;
   });
+}
+
+function arrayEquals(a: any[], b: any[]): boolean {
+  return (
+    Array.isArray(a) &&
+    Array.isArray(b) &&
+    a.length === b.length &&
+    a.every((val, index) => val === b[index])
+  );
 }
 
 /**
@@ -69,12 +84,12 @@ export default function calculateSUVScalingFactors(
   const isSingleSeries = instances.every(instance => {
     return (
       instance.Units === Units &&
-      instance.CorrectedImage === CorrectedImage &&
+      arrayEquals(instance.CorrectedImage, CorrectedImage) &&
       instance.PatientWeight === PatientWeight &&
       instance.PatientSex === PatientSex &&
       instance.PatientSize === PatientSize &&
       instance.RadionuclideHalfLife === instances[0].RadionuclideHalfLife &&
-      instance.TotalDose === instances[0].TotalDose &&
+      instance.RadionuclideTotalDose === instances[0].RadionuclideTotalDose &&
       instance.DecayCorrection === instances[0].DecayCorrection &&
       instance.SeriesDate === instances[0].SeriesDate &&
       instance.SeriesTime === instances[0].SeriesTime
@@ -101,14 +116,6 @@ export default function calculateSUVScalingFactors(
       );
     });
 
-    if (hasValidSUVScaleFactor) {
-      results = instances.map(
-        // Added ! to tell Typescript that this can't be undefined, since we are testing it
-        // in the .every loop above.
-        instance => instance.PhilipsPETPrivateGroup!.SUVScaleFactor!
-      );
-    }
-
     const hasValidActivityConcentrationScaleFactor: boolean = instances.every(
       instance => {
         return (
@@ -122,7 +129,16 @@ export default function calculateSUVScalingFactors(
       }
     );
 
-    if (hasValidActivityConcentrationScaleFactor) {
+    //console.log(`hasValidSUVScaleFactor: ${hasValidSUVScaleFactor}`);
+    //console.log(`hasValidActivityConcentrationScaleFactor: ${hasValidActivityConcentrationScaleFactor}`);
+
+    if (hasValidSUVScaleFactor) {
+      results = instances.map(
+        // Added ! to tell Typescript that this can't be undefined, since we are testing it
+        // in the .every loop above.
+        instance => instance.PhilipsPETPrivateGroup!.SUVScaleFactor!
+      );
+    } else if (hasValidActivityConcentrationScaleFactor) {
       // Note that for the Philips case these are probably all identical,
       // but the function still returns an array.
       const bqmlScaleFactors: number[] = _calculateBQMLScaleFactor(instances);
@@ -137,11 +153,13 @@ export default function calculateSUVScalingFactors(
           bqmlScaleFactors[index]
         );
       });
+    } else {
+      throw new Error(
+        `Units are in CNTS, but PhilipsPETPrivateGroup has invalid values: ${JSON.stringify(
+          PhilipsPETPrivateGroup
+        )}`
+      );
     }
-
-    throw new Error(
-      `Units are in CNTS, but PhilipsPETPrivateGroup has invalid values: ${PhilipsPETPrivateGroup}`
-    );
   } else if (Units === 'GML') {
     // assumes that GML indicates SUVbw instead of SUVlbm
     results.fill(1);

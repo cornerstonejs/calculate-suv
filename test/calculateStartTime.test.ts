@@ -1,5 +1,4 @@
 import calculateStartTime from '../src/calculateStartTime';
-//import combineDateTime from '../src/combineDateTime';
 
 describe('calculateStartTime', () => {
   describe('when RadiopharmaceuticalStartDateTime is provided', () => {
