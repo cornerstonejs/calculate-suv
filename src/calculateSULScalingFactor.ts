@@ -1,11 +1,7 @@
-import {
-  calculateSUVScalingFactor,
-  SUVScalingFactorInput,
-} from './calculateSUVScalingFactor';
-
-export interface SULScalingFactorInput extends SUVScalingFactorInput {
+export interface SULScalingFactorInput {
   PatientSize: number;
   PatientSex: string; //'M' | 'F';
+  PatientWeight: number;
 }
 
 export default function calculateSULScalingFactor(
@@ -23,9 +19,7 @@ export default function calculateSULScalingFactor(
     throw new Error(`PatientSex is an invalid value: ${PatientSex}`);
   }
 
-  const SUVScalingFactor = calculateSUVScalingFactor(inputs);
-
-  return SUVScalingFactor * sulFactor;
+  return sulFactor;
 }
 
 export { calculateSULScalingFactor };

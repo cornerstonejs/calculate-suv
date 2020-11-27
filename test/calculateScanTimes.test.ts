@@ -1,13 +1,13 @@
-import calculateScanTime from '../src/calculateScanTime';
-import combineDateTime from '../src/combineDateTime';
+import calculateScanTimes from '../src/calculateScanTimes';
+import dateTimeToJSDate from '../src/dateTimeToJSDate';
 
-describe('calculateScanTime', () => {
-  describe('when SeriesData and AcquisitionDate match and SeriesTime is later than AcquisitionTime', () => {
+describe('calculateScanTimes', () => {
+  describe('when SeriesData and AcquisitionDate match and SeriesTime is earlier than AcquisitionTime', () => {
     it('should return the earliest DateTime among all series', () => {
       // Arrange
       const SeriesDate = '20201127';
-      const SeriesTime = '095210.10001';
-      let instances = [
+      const SeriesTime = '093010.10001';
+      const instances = [
         {
           SeriesDate,
           AcquisitionDate: SeriesDate,
@@ -29,31 +29,21 @@ describe('calculateScanTime', () => {
       ];
 
       // Act
-      const scanDateTime = calculateScanTime(instances);
+      const scanDateTimes = calculateScanTimes(instances);
 
       // Assert
-      const earliestDateTime = combineDateTime(
-        {
-          year: 2020,
-          month: 11,
-          day: 27,
-        },
-        {
-          hours: 9,
-          minutes: 47,
-          seconds: 10,
-          fractionalSeconds: 12004,
-        }
-      );
+      const earliestDateTime = dateTimeToJSDate(`${SeriesDate}${SeriesTime}`);
 
-      expect(scanDateTime).toEqual(earliestDateTime);
+      scanDateTimes.forEach(scanDateTime => {
+        expect(scanDateTime).toEqual(earliestDateTime);
+      });
     });
   });
 
   // TODO: Add test for when when SeriesData and AcquisitionDate do not match
   // (i.e. AcquisitionDate is the next day, due to acquiring near midnight or
   // long half-life tracers such as Iodine 124)
-  // TODO: when SeriesData and AcquisitionDate do not match and SeriesTime is earlier than AcquisitionTime
+  // TODO: when SeriesData and AcquisitionDate do not match and SeriesTime is later than AcquisitionTime
   // TODO: when SeriesData and AcquisitionDate match and SeriesTime is earlier than AcquisitionTime
   // TODO: when SeriesData and AcquisitionDate do not match and SeriesTime is later than AcquisitionTime
   // TODO: Add test to verify error is thrown if input is invalid
