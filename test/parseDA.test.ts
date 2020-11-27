@@ -14,6 +14,58 @@ describe('parseDA', () => {
       expect(val.month).toEqual(3);
       expect(val.day).toEqual(29);
     });
+
+    it('should return the expected value for leap years', () => {
+      // Arrange
+      const daString = '20200228';
+
+      // Act
+      const val = parseDA(daString);
+
+      // Assert
+      expect(val.year).toEqual(2020);
+      expect(val.month).toEqual(2);
+      expect(val.day).toEqual(28);
+    });
+
+    it('should return the expected value for non-leap years', () => {
+      // Arrange
+      const daString = '20190228';
+
+      // Act
+      const val = parseDA(daString);
+
+      // Assert
+      expect(val.year).toEqual(2019);
+      expect(val.month).toEqual(2);
+      expect(val.day).toEqual(28);
+    });
+
+    it('should return the expected value for months with 30 days', () => {
+      // Arrange
+      const daString = '20190228';
+
+      // Act
+      const val = parseDA(daString);
+
+      // Assert
+      expect(val.year).toEqual(2019);
+      expect(val.month).toEqual(2);
+      expect(val.day).toEqual(28);
+    });
+
+    it('should return the expected value for months with 31 days', () => {
+      // Arrange
+      const daString = '20190128';
+
+      // Act
+      const val = parseDA(daString);
+
+      // Assert
+      expect(val.year).toEqual(2019);
+      expect(val.month).toEqual(1);
+      expect(val.day).toEqual(28);
+    });
   });
 
   describe('when parsing a DA with a bad month', () => {

@@ -95,10 +95,19 @@ describe('parseTM', () => {
     });
   });
 
-  describe('when parsing a invalid TM', () => {
-    it('should throw an exception', () => {
+  describe('when parsing an invalid TM', () => {
+    it('should throw an exception if the time is greater than 23h', () => {
       // Arrange
       const tmString = '241236.531000';
+      const invoker = () => parseTM(tmString);
+
+      // Act / Asset
+      expect(invoker).toThrow();
+    });
+
+    it('should throw an exception if the TM is too short', () => {
+      // Arrange
+      const tmString = '1';
       const invoker = () => parseTM(tmString);
 
       // Act / Asset

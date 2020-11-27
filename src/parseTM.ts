@@ -1,8 +1,8 @@
 export interface TimeInterface {
-  hours: number;
-  minutes: number | undefined;
-  seconds: number | undefined;
-  fractionalSeconds: number | undefined;
+  hours?: number;
+  minutes?: number;
+  seconds?: number;
+  fractionalSeconds?: number;
 }
 
 /**

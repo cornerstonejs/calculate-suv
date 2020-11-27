@@ -1,5 +1,6 @@
 import { parseDA, DateInterface } from './parseDA';
 import { parseTM, TimeInterface } from './parseTM';
+import dateTimeToJSDate from './dateTimeToJSDate';
 import combineDateTime from './combineDateTime';
 
 export default function calculateStartTime(input: {
@@ -16,16 +17,11 @@ export default function calculateStartTime(input: {
   let time: TimeInterface;
   let date: DateInterface;
   if (RadiopharmaceuticalStartDateTime) {
-    const [datePart, timePart] = RadiopharmaceuticalStartDateTime.split('.');
-
-    date = parseDA(datePart);
-    time = parseTM(timePart);
-
-    console.log(date);
-    console.log(time);
-
-    return combineDateTime(date, time);
+    return dateTimeToJSDate(RadiopharmaceuticalStartDateTime);
   } else if (RadiopharmaceuticalStartTime && SeriesDate) {
+    // start Date	is not explicit - assume	same as	Series Date;
+    // but consider	spanning midnight
+    // TODO: do we need some logic to check if the scan went over midnight?
     time = parseTM(RadiopharmaceuticalStartTime);
     date = parseDA(SeriesDate);
 
