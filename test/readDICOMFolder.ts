@@ -75,7 +75,10 @@ export default function readDICOMFolder(folder: string): DatasetReadResults {
 
   const instanceMetadata = datasets.map(
     (dataset: any, index: number): InstanceMetadata => {
-      pixelDataTypedArray.set(dataset.PixelData, index * frameLength);
+      pixelDataTypedArray.set(
+        new TypedArray(dataset.PixelData),
+        index * frameLength
+      );
 
       return {
         SeriesDate: dataset.SeriesDate,

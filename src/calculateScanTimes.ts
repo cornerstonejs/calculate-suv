@@ -72,16 +72,20 @@ export default function calculateScanTimes(
         );
       });
 
-      if (!hasValidFrameTimes) {
-        return results.fill(earliestAcquisitionDateTime);
-      }
+      console.log(hasValidFrameTimes);
+
+      // TODO: Temporarily commented out the checks and logic below to
+      // investigate the BQML_AC_DT_<_S_DT + SIEMENS case
+      //if (!hasValidFrameTimes) {
+      return results.fill(earliestAcquisitionDateTime);
+      //}
 
       /* Siemens PETsyngo	3.x	multi-injection logic
       - backcompute	from	center	(average	count	rate	)	of	time	window	for	bed	position	(frame)	in	series (reliable	in	all	cases)
       - Acquisition	Date	(0x0008,0x0022)	and	Time	(0x0008,0x0032) are	the	start	of	the	bed	position	(frame)
       - Frame	Reference	Time	(0x0054,0x1300) is	the	offset	(ms)	from	the	scan	Date	and	Time we	want	to	the	average	count	rate	time
       */
-      return instances.map(instance => {
+      /*return instances.map(instance => {
         const {
           FrameReferenceTime,
           ActualFrameDuration,
@@ -127,19 +131,18 @@ export default function calculateScanTimes(
         const decayDuringFrame = decayConstant * frameDurationInSec;
         // TODO: double check this is correctly copied from QIBA pseudocode
         const averageCountRateTimeWithinFrameInSec =
-          1000 *
           (1 / decayConstant) *
-          (Math.log(decayDuringFrame) / (1 - Math.exp(-decayConstant)));
+          Math.log(decayDuringFrame / (1 - Math.exp(-decayConstant)));
         const scanDateTimeAsNumber =
           Number(acquisitionDateTime) -
-          FrameReferenceTime +
+          FrameReferenceTime / 1000 +
           averageCountRateTimeWithinFrameInSec;
 
         const scanDate = new Date(scanDateTimeAsNumber);
         console.log('SIEMENS PATH');
         console.log(new Date(scanDateTimeAsNumber));
         return scanDate;
-      });
+      });*/
     }
   }
 }

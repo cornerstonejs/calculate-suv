@@ -21,7 +21,7 @@ export interface InstanceMetadata {
   RadiopharmaceuticalStartDateTime?: string;
 
   PhilipsPETPrivateGroup?: PhilipsPETPrivateGroup;
-  GEPrivatePostInjectionDateTime?: string;
+  GEPrivatePostInjectionDateTime?: string; // (0x0009,0x100d,“GEMS_PETD_01”
 
   // Only used in Siemens case
   FrameReferenceTime?: number;
