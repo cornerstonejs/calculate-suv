@@ -3097,10 +3097,10 @@ data-urls@^1.1.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
-dcmjs@^0.16.6:
-  version "0.16.6"
-  resolved "https://registry.yarnpkg.com/dcmjs/-/dcmjs-0.16.6.tgz#6cd53d008a887646e2d1a7a2ac87cd7e8174ef56"
-  integrity sha512-c/ZOJH2RpQJz7yVTaCzjMujIVk0YiW5y3W13v699PL4YPCFqT9v9hEoCo7/ZAdop/kAXqRkFAswcnvb+LiOHuw==
+dcmjs@^0.16.7:
+  version "0.16.7"
+  resolved "https://registry.yarnpkg.com/dcmjs/-/dcmjs-0.16.7.tgz#0ab48daeaa5db2e5fa3734aede2f5053a30badf7"
+  integrity sha512-M8ViDmTZjMcTbWjIitsChtPfxqCyZ5Lqa8FWzjffQNacmqr0qCPpxoC9kji9rui2AgbuY5HL27dXrK7w+dmEvg==
   dependencies:
     "@babel/polyfill" "^7.8.3"
     "@babel/runtime" "^7.8.4"

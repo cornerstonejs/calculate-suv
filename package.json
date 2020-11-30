@@ -52,7 +52,7 @@
     "@size-limit/preset-small-lib": "^4.9.0",
     "@types/jest": "^26.0.15",
     "babel-jest": "^26.6.3",
-    "dcmjs": "^0.16.6",
+    "dcmjs": "^0.16.7",
     "husky": "^4.3.0",
     "loglevelnext": "^4.0.1",
     "nifti-js": "^1.0.1",
