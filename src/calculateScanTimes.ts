@@ -13,7 +13,7 @@ interface InstanceMetadataForScanTimes {
 
   // Only used in Siemens case
   RadionuclideHalfLife?: number; // 	RadionuclideHalfLife(0x0018,0x1075)	in	Radiopharmaceutical	Information	Sequence(0x0054,0x0016)
-  TotalDose?: number;
+  RadionuclideTotalDose?: number;
   FrameReferenceTime?: number;
   ActualFrameDuration?: number;
 }

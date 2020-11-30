@@ -2,31 +2,33 @@ import readDICOMFolder from './readDICOMFolder';
 import readNifti from './readNifti';
 
 import { calculateSUVScalingFactors } from '../src';
-import log from 'loglevelnext';
+import dcmjs from 'dcmjs';
 
-// TODO: stop dcmjs from using console.error so much
-log.disable();
+// Temporarily diable dcmjs logging because it logs a lot of
+// VR errors
+dcmjs.log.disable();
 
+// Note: Converted everything to Implicit Little Endian Transfer Syntax:
+// find . -maxdepth 1 -type f -print0 | parallel -0 dcmconv +ti {1} {1}
 const sampleDataPaths: string[] = [
   // Working:
   'PHILIPS_BQML', // Units = BQML. Philips Private Group present, but intentionally not used
   'PHILIPS_CNTS_&_BQML_SUV', // Units = CNTS (TBD: Not sure what & BQML refers to? includes private grp?)
   'PHILIPS_CNTS_AND_SUV', // Units = CNTS
   'SIEMENS', // TODO: Write down characteristics of this data
+  'GE_MEDICAL_AND_BQML', // TODO: Write down characteristics of this data
 
   // ----- Not currently working ------
-  //'RADIOPHARM_DATETIME_UNDEFINED',
-  // pixelDataTypedArray.findIndex(a => a>0)
-  // groundTruthSUV.findIndex(a => a>0)
-  // give different indices? Indicates maybe a sorting problem for the DICOMs?
-
   //'CPS_AND_BQML_AC_DT_-_S_DT',
   // Rescale and SUV Scaling factor appear correct, but values appear incorrectly ordered
   // Possible same DICOM => Array ingestion issue as RADIOPHARM_DATETIME_UNDEFINED
   // Some values are very very close but not exact
 
-  // 'GE_MEDICAL_AND_BQML', // currently totally wrong, total of scaled values is 1.25 times the ground truth
-  // Stored pixel data is Big Endian, we should convert it to little or add proper decoding
+  // 'RADIOPHARM_DATETIME_UNDEFINED',
+  // pixelDataTypedArray.findIndex(a => a>0)
+  // groundTruthSUV.findIndex(a => a>0)
+  // give different indices? Indicates maybe a sorting problem for the DICOMs?
+  // Note: didn't retest this after converting eveverything to little endian
 
   // 'BQML_AC_DT_<_S_DT + SIEMENS',
   // - If we use the QIBA logic with frame durations etc, it does not match Salim's ground truth
