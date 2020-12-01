@@ -60,9 +60,11 @@ describe('combineDateTime', () => {
     // Act
     const combinedDateTime = combineDateTime(date, time);
     const timeInSec = combinedDateTime.getTimeInSec();
+    const dateJS = new Date(`2020-02-27T00:00:00.000000Z`);
 
     // Assert
-    const expected = 27 * 86400 + 9 * 3600 + 47 * 60 + 10 + 0.12004;
+    const expected =
+      dateJS.getTime() / 1000 + 9 * 3600 + 47 * 60 + 10 + 0.12004;
     expect(timeInSec).toEqual(expected);
   });
 
@@ -71,22 +73,24 @@ describe('combineDateTime', () => {
     const date = {
       year: 2020,
       month: 2,
-      day: 3,
+      day: 27,
     };
 
     const time = {
-      hours: 12,
-      minutes: 4,
-      seconds: 7,
-      fractionalSeconds: 1374,
+      hours: 9,
+      minutes: 47,
+      seconds: 10,
+      fractionalSeconds: 12004,
     };
 
     // Act
     const combinedDateTime = combineDateTime(date, time);
     const timeInMicroSec = combinedDateTime.getTimeInMicroSec();
+    const dateJS = new Date(`2020-02-27T00:00:00.000000Z`);
 
     // Assert
-    const expected = (3 * 86400 + 12 * 3600 + 4 * 60 + 7 + 0.1374) * 1e6;
+    const expected = 
+      (dateJS.getTime() / 1000 + 9 * 3600 + 47 * 60 + 10 + 0.12004) * 1e6;
     expect(timeInMicroSec).toEqual(expected);
   });
 });

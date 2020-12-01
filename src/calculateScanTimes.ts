@@ -49,7 +49,8 @@ export default function calculateScanTimes(
       earliestAcquisitionDateTime = acquisitionDateTime;
     } else {
       earliestAcquisitionDateTime =
-        acquisitionDateTime < earliestAcquisitionDateTime
+        acquisitionDateTime.getTimeInSec() <
+        earliestAcquisitionDateTime.getTimeInSec()
           ? acquisitionDateTime
           : earliestAcquisitionDateTime;
     }
@@ -59,7 +60,8 @@ export default function calculateScanTimes(
     throw new Error('Scan time could not be calculated.');
   }
 
-  if (seriesDateTime <= earliestAcquisitionDateTime) {
+  if (
+      seriesDateTime.getTimeInSec() <= earliestAcquisitionDateTime.getTimeInSec()) {
     return results.fill(seriesDateTime);
   } else {
     if (GEPrivatePostInjectionDateTime) {

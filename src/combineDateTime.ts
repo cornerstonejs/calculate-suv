@@ -9,10 +9,7 @@ export class FullDateInterface {
   }
 
   getTimeInSec(): number {
-    // returns time as seconds since the first day of the month
-    // ideally one would return the time in sec from a precise date (e.g. 1 january 1970),
-    // but this would involve much more complicated logic and
-    // it is unrealistic that a scanning last more than a month.
+    // returns time as seconds since 1 january 1970
 
     // yyyy-mm-ddTHH:MM:SS.FFFFFFZ
     const dateString = this.fullDate.substring(0, 10);
@@ -40,6 +37,8 @@ export class FullDateInterface {
     ) {
       throw new Error(`invalid date '${dateString}'`);
     }
+
+    const dateJS = new Date(`${dateString}T00:00:00.000000Z`);
 
     // HHMMSS.FFFFFF
     const HH = parseInt(timeString.substring(0, 2), 10);
@@ -70,10 +69,7 @@ export class FullDateInterface {
       throw new Error(`invalid time '${timeString}'`);
     }
 
-    let timeInSec = 0;
-    if (dd !== undefined) {
-      timeInSec += dd * 86400;
-    }
+    let timeInSec = dateJS.getTime() / 1000;
 
     timeInSec += HH * 3600;
     if (MM !== undefined) {
