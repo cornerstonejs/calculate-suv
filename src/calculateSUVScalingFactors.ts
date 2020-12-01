@@ -1,3 +1,4 @@
+import { FullDateInterface } from './combineDateTime';
 import { calculateScanTimes } from './calculateScanTimes';
 import calculateSULScalingFactor from './calculateSULScalingFactor';
 import { calculateStartTime } from './calculateStartTime';
@@ -20,8 +21,8 @@ function _calculateBQMLScaleFactor(instances: InstanceMetadata[]): number[] {
     SeriesDate,
   } = instances[0];
 
-  const scanTimes: Date[] = calculateScanTimes(instances);
-  const startTime: Date = calculateStartTime({
+  const scanTimes: FullDateInterface[] = calculateScanTimes(instances);
+  const startTime: FullDateInterface = calculateStartTime({
     RadiopharmaceuticalStartDateTime,
     RadiopharmaceuticalStartTime,
     SeriesDate,
@@ -30,7 +31,7 @@ function _calculateBQMLScaleFactor(instances: InstanceMetadata[]): number[] {
   return instances.map((_, index) => {
     const scanTime = scanTimes[index];
     const decayTimeInSec: number =
-      (scanTime.getTime() - startTime.getTime()) / 1000;
+      scanTime.getTimeInSec() - startTime.getTimeInSec();
     if (decayTimeInSec < 0) {
       throw new Error('Decay time cannot be less than zero');
     }

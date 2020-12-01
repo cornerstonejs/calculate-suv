@@ -1,4 +1,4 @@
-import combineDateTime from './combineDateTime';
+import combineDateTime, { FullDateInterface } from './combineDateTime';
 import parseDA, { DateInterface } from './parseDA';
 import parseTM, { TimeInterface } from './parseTM';
 import dateTimeToJSDate from './dateTimeToJSDate';
@@ -20,7 +20,7 @@ interface InstanceMetadataForScanTimes {
 
 export default function calculateScanTimes(
   instances: InstanceMetadataForScanTimes[]
-): Date[] {
+): FullDateInterface[] {
   const {
     SeriesDate,
     SeriesTime,
@@ -29,15 +29,18 @@ export default function calculateScanTimes(
   const results = new Array(instances.length);
   const seriesDate: DateInterface = parseDA(SeriesDate);
   const seriesTime: TimeInterface = parseTM(SeriesTime);
-  const seriesDateTime: Date = combineDateTime(seriesDate, seriesTime);
+  const seriesDateTime: FullDateInterface = combineDateTime(
+    seriesDate,
+    seriesTime
+  );
 
-  let earliestAcquisitionDateTime: Date | undefined;
+  let earliestAcquisitionDateTime: FullDateInterface | undefined;
   instances.forEach(instance => {
     const { AcquisitionDate, AcquisitionTime } = instance;
 
     const acquisitionDate: DateInterface = parseDA(AcquisitionDate);
     const acquisitionTime: TimeInterface = parseTM(AcquisitionTime);
-    const acquisitionDateTime: Date = combineDateTime(
+    const acquisitionDateTime: FullDateInterface = combineDateTime(
       acquisitionDate,
       acquisitionTime
     );
@@ -121,7 +124,7 @@ export default function calculateScanTimes(
 
         const acquisitionDate: DateInterface = parseDA(AcquisitionDate);
         const acquisitionTime: TimeInterface = parseTM(AcquisitionTime);
-        const acquisitionDateTime: Date = combineDateTime(
+        const acquisitionDateTime: FullDateInterface = combineDateTime(
           acquisitionDate,
           acquisitionTime
         );

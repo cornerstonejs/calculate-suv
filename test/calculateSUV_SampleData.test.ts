@@ -19,18 +19,18 @@ const sampleDataPaths: string[] = [
   'GE_MEDICAL_AND_BQML', // TODO: Write down characteristics of this data
 
   // ----- Not currently working ------
-  //'CPS_AND_BQML_AC_DT_-_S_DT',
+  'CPS_AND_BQML_AC_DT_-_S_DT',
   // Rescale and SUV Scaling factor appear correct, but values appear incorrectly ordered
   // Possible same DICOM => Array ingestion issue as RADIOPHARM_DATETIME_UNDEFINED
   // Some values are very very close but not exact
 
-  // 'RADIOPHARM_DATETIME_UNDEFINED',
+  'RADIOPHARM_DATETIME_UNDEFINED',
   // pixelDataTypedArray.findIndex(a => a>0)
   // groundTruthSUV.findIndex(a => a>0)
   // give different indices? Indicates maybe a sorting problem for the DICOMs?
   // Note: didn't retest this after converting eveverything to little endian
 
-  // 'BQML_AC_DT_<_S_DT + SIEMENS',
+  //'BQML_AC_DT_<_S_DT + SIEMENS',
   // - If we use the QIBA logic with frame durations etc, it does not match Salim's ground truth
   // - If we use Salim's logic, taking earliest acquisition date time, the results are
   //   very very close, but for some reason it's not exactly right.

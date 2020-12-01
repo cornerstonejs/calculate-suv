@@ -1,13 +1,13 @@
+import combineDateTime, { FullDateInterface } from './combineDateTime';
 import { parseDA, DateInterface } from './parseDA';
 import { parseTM, TimeInterface } from './parseTM';
 import dateTimeToJSDate from './dateTimeToJSDate';
-import combineDateTime from './combineDateTime';
 
 export default function calculateStartTime(input: {
   RadiopharmaceuticalStartDateTime?: string;
   RadiopharmaceuticalStartTime?: string;
   SeriesDate?: string;
-}): Date {
+}): FullDateInterface {
   const {
     RadiopharmaceuticalStartDateTime,
     RadiopharmaceuticalStartTime,
