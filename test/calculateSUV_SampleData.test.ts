@@ -17,21 +17,12 @@ const sampleDataPaths: string[] = [
   'PHILIPS_CNTS_AND_SUV', // Units = CNTS
   'SIEMENS', // TODO: Write down characteristics of this data
   'GE_MEDICAL_AND_BQML', // TODO: Write down characteristics of this data
-  'BQML_AC_DT_<_S_DT + SIEMENS', // it does not match Salim's ground truth, because he truncates the time at seconds precision,
+  'BQML_AC_DT_<_S_DT + SIEMENS',
+  'CPS_AND_BQML_AC_DT_-_S_DT',
+  'RADIOPHARM_DATETIME_UNDEFINED'
+  // last three do not match Salim's ground truth, because he truncates the time at seconds precision,
   // while we recover the time at microseconds precision. Lowering the precision replicates Salim's ground truth.
   // reference: https://github.com/wendyrvllr/Dicom-To-CNN/blob/wendy/library_dicom/dicom_processor/model/SeriesPT.py
-
-  // ----- Not currently working ------
-  //'CPS_AND_BQML_AC_DT_-_S_DT',
-  // Rescale and SUV Scaling factor appear correct, but values appear incorrectly ordered
-  // Possible same DICOM => Array ingestion issue as RADIOPHARM_DATETIME_UNDEFINED
-  // Some values are very very close but not exact
-
-  //'RADIOPHARM_DATETIME_UNDEFINED',
-  // pixelDataTypedArray.findIndex(a => a>0)
-  // groundTruthSUV.findIndex(a => a>0)
-  // give different indices? Indicates maybe a sorting problem for the DICOMs?
-  // Note: didn't retest this after converting eveverything to little endian
 ];
 
 // Note: sample data must be organized as
