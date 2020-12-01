@@ -89,7 +89,7 @@ describe('combineDateTime', () => {
     const dateJS = new Date(`2020-02-27T00:00:00.000000Z`);
 
     // Assert
-    const expected = 
+    const expected =
       (dateJS.getTime() / 1000 + 9 * 3600 + 47 * 60 + 10 + 0.12004) * 1e6;
     expect(timeInMicroSec).toEqual(expected);
   });

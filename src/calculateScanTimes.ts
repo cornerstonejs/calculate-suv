@@ -61,7 +61,8 @@ export default function calculateScanTimes(
   }
 
   if (
-      seriesDateTime.getTimeInSec() <= earliestAcquisitionDateTime.getTimeInSec()) {
+    seriesDateTime.getTimeInSec() <= earliestAcquisitionDateTime.getTimeInSec()
+  ) {
     return results.fill(seriesDateTime);
   } else {
     if (GEPrivatePostInjectionDateTime) {
