@@ -1,4 +1,5 @@
 import calculateStartTime from '../src/calculateStartTime';
+import { FullDateInterface } from '../src/combineDateTime';
 
 describe('calculateStartTime', () => {
   describe('when RadiopharmaceuticalStartDateTime is provided', () => {
@@ -14,7 +15,9 @@ describe('calculateStartTime', () => {
       const startDateTime = calculateStartTime(data);
 
       // Assert
-      const earliestDateTime = new Date('2020-09-27T08:30:45.000Z');
+      const earliestDateTime = new FullDateInterface(
+        '2020-09-27T08:30:45.000000Z'
+      );
 
       expect(startDateTime).toEqual(earliestDateTime);
     });
@@ -33,7 +36,9 @@ describe('calculateStartTime', () => {
       const startDateTime = calculateStartTime(data);
 
       // Assert
-      const earliestDateTime = new Date('2020-09-27T08:30:45.000Z');
+      const earliestDateTime = new FullDateInterface(
+        '2020-09-27T08:30:45.000000Z'
+      );
 
       expect(startDateTime).toEqual(earliestDateTime);
     });
