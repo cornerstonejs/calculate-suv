@@ -31,9 +31,18 @@ sampleDataPaths.forEach(folder => {
   precomputedSUVFactors.set('PHILIPS_CNTS_AND_SUV', 0.000728);
   precomputedSUVFactors.set('SIEMENS', 0.00042748316187197236);
   precomputedSUVFactors.set('GE_MEDICAL_AND_BQML', 0.0005367387681819742);
-  precomputedSUVFactors.set('BQML_AC_DT_<_S_DT + SIEMENS', 0.0004069156854009332);
-  precomputedSUVFactors.set('CPS_AND_BQML_AC_DT_-_S_DT', 0.00026503312764157046);
-  precomputedSUVFactors.set('RADIOPHARM_DATETIME_UNDEFINED', 0.0003721089202818729);
+  precomputedSUVFactors.set(
+    'BQML_AC_DT_<_S_DT + SIEMENS',
+    0.0004069156854009332
+  );
+  precomputedSUVFactors.set(
+    'CPS_AND_BQML_AC_DT_-_S_DT',
+    0.00026503312764157046
+  );
+  precomputedSUVFactors.set(
+    'RADIOPHARM_DATETIME_UNDEFINED',
+    0.0003721089202818729
+  );
   /// at the moment for a dataset, each frame has always the same SUV factor.
   /// 'BQML_AC_DT_<_S_DT + SIEMENS' will have eventually a SUV factor value for each frame,
   /// in that case this test will need to be update by comparing the SUV factors of the frames with precomputed ones.
@@ -42,9 +51,7 @@ sampleDataPaths.forEach(folder => {
     it('matches the known, precomputed, SUV values', () => {
       // Arrange
       // 1. Read underlying input dicom data
-      const {
-        instanceMetadata,
-      } = readDICOMFolder(dicomFolder);
+      const { instanceMetadata } = readDICOMFolder(dicomFolder);
 
       // Act
       // 2. Calculate scaleFactor from the metadata
@@ -52,7 +59,11 @@ sampleDataPaths.forEach(folder => {
 
       // Assert
       // 3. Check approximate equality between ground truth SUV and our result
-      expect(Math.abs(scalingFactors[0].suvFactor - precomputedSUVFactors.get(`${folder}`)) < 1e-6).toEqual(true);
+      expect(
+        Math.abs(
+          scalingFactors[0].suvFactor - precomputedSUVFactors.get(`${folder}`)
+        ) < 1e-6
+      ).toEqual(true);
     });
   });
 });

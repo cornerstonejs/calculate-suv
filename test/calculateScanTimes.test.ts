@@ -190,23 +190,20 @@ describe('calculateScanTimes', () => {
 });
 
 describe('calculateScanTimes Error Handling', () => {
-  
   it('throws an Error if earliest acquisition scan time could not be calculated', () => {
     // Arrange
     const instances = [
-    {
-      SeriesDate: '20201127',
-      SeriesTime: '133010',
-      AcquisitionDate: '30001127',
-      AcquisitionTime: '133010',
-    },
+      {
+        SeriesDate: '20201127',
+        SeriesTime: '133010',
+        AcquisitionDate: '30001127',
+        AcquisitionTime: '133010',
+      },
     ];
 
     // Act
     expect(() => {
       calculateScanTimes(instances);
-    }).toThrowError(
-      'Earliest acquisition time or date could not be parsed.'
-    );
+    }).toThrowError('Earliest acquisition time or date could not be parsed.');
   });
 });

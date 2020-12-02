@@ -111,7 +111,7 @@ describe('combineDateTime', () => {
 
     // Act
     const combinedDateTime = combineDateTime(date, time);
-  
+
     // Assert
     expect(() => {
       combinedDateTime.getTimeInSec();
@@ -148,7 +148,7 @@ describe('combineDateTime', () => {
 
     // Act
     const date = new FullDateInterface(string);
-  
+
     // Assert
     expect(() => {
       date.getTimeInSec();
@@ -161,11 +161,10 @@ describe('combineDateTime', () => {
 
     // Act
     const date = new FullDateInterface(string);
-  
+
     // Assert
     expect(() => {
       date.getTimeInSec();
     }).toThrowError(`invalid time`);
   });
-
 });

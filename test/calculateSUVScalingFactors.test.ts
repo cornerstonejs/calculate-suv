@@ -74,19 +74,22 @@ describe('calculateSUVScalingFactors', () => {
   it('returns 0.000551 if Units are CNTS (PhilipsPETPrivateGroup SUVScaleFactor available)', () => {
     input[0].Units = 'CNTS';
 
-    expect(calculateSUVScalingFactors(input)).toEqual([{ suvFactor: 0.000551 }]);
+    expect(calculateSUVScalingFactors(input)).toEqual([
+      { suvFactor: 0.000551 },
+    ]);
   });
 
   it('returns 1602.5629999999999 if Units are CNTS (PhilipsPETPrivateGroup SUVScaleFactor not available)', () => {
-
-    expect(calculateSUVScalingFactors(inputPhilips)).toEqual([{ suvFactor: 1602.5629999999999 }]);
+    expect(calculateSUVScalingFactors(inputPhilips)).toEqual([
+      { suvFactor: 1602.5629999999999 },
+    ]);
   });
 
   it('returns sulFactor 1038.3343153669791 and suvFactor 750 if applying SUL factors', () => {
-
-    expect(calculateSUVScalingFactors(inputSULFactor)).toEqual([{ "sulFactor": 1038.3343153669791, "suvFactor": 750}]);
+    expect(calculateSUVScalingFactors(inputSULFactor)).toEqual([
+      { sulFactor: 1038.3343153669791, suvFactor: 750 },
+    ]);
   });
-
 });
 
 describe('calculateSUVScalingFactor Error Handling', () => {
@@ -105,7 +108,6 @@ describe('calculateSUVScalingFactor Error Handling', () => {
         AcquisitionTime: '095417',
         AcquisitionDate: '20201023',
       },
-
     ];
     multiInput = [
       {
@@ -150,7 +152,7 @@ describe('calculateSUVScalingFactor Error Handling', () => {
         AcquisitionDate: '20201023',
         PhilipsPETPrivateGroup: {
           SUVScaleFactor: 0,
-          ActivityConcentrationScaleFactor: 0.,
+          ActivityConcentrationScaleFactor: 0,
         },
       },
     ];
@@ -183,18 +185,20 @@ describe('calculateSUVScalingFactor Error Handling', () => {
   });
 
   it('throws an Error if series-level metadata are different', () => {
-
     expect(() => {
       calculateSUVScalingFactors(multiInput);
-    }).toThrowError('The set of instances does not appear to come from one Series. Every instance must have identical values for series-level metadata properties');
+    }).toThrowError(
+      'The set of instances does not appear to come from one Series. Every instance must have identical values for series-level metadata properties'
+    );
   });
 
   it('throws an Error if Philips has no ValidSUVScaleFactor and ValidActivityConcentrationScaleFactor', () => {
-
     expect(() => {
       calculateSUVScalingFactors(inputPhilips);
-    }).toThrowError(`Units are in CNTS, but PhilipsPETPrivateGroup has invalid values: ${JSON.stringify(
-      inputPhilips[0].PhilipsPETPrivateGroup
-    )}`);
+    }).toThrowError(
+      `Units are in CNTS, but PhilipsPETPrivateGroup has invalid values: ${JSON.stringify(
+        inputPhilips[0].PhilipsPETPrivateGroup
+      )}`
+    );
   });
 });
