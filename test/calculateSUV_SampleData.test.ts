@@ -19,7 +19,7 @@ const sampleDataPaths: string[] = [
   'GE_MEDICAL_AND_BQML', // TODO: Write down characteristics of this data
   'BQML_AC_DT_<_S_DT + SIEMENS',
   'CPS_AND_BQML_AC_DT_-_S_DT',
-  'RADIOPHARM_DATETIME_UNDEFINED'
+  'RADIOPHARM_DATETIME_UNDEFINED',
   // last three do not match Salim's ground truth, because he truncates the time at seconds precision,
   // while we recover the time at microseconds precision. Lowering the precision replicates Salim's ground truth.
   // reference: https://github.com/wendyrvllr/Dicom-To-CNN/blob/wendy/library_dicom/dicom_processor/model/SeriesPT.py

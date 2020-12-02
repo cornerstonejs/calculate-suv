@@ -35,12 +35,14 @@ export default function readDICOMFolder(folder: string): DatasetReadResults {
   });
 
   datasets.sort((a, b) => {
-    if (a.ImageIndex && b.ImageIndex) {
+    if (a.SliceLocation && b.SliceLocation) {
+      return a.SliceLocation - b.SliceLocation;
+    } else if (a.ImageIndex && b.ImageIndex) {
       return a.ImageIndex - b.ImageIndex;
     } else {
       // TODO: check if we are sorting the same as normalizeToDataset is
       console.log(a);
-      throw new Error('ImageIndex not present');
+      throw new Error('SliceLocation and ImageIndex are not present');
     }
   });
 
