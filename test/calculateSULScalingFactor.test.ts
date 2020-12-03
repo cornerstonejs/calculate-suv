@@ -19,4 +19,12 @@ describe('calculateSULScalingFactor', () => {
 
     expect(calculateSULScalingFactor(input)).toEqual(1.055515323759684);
   });
+
+  it('ThrowError if gender is missing', () => {
+    input.PatientSex = 'T';
+
+    expect(() => {
+      calculateSULScalingFactor(input);
+    }).toThrowError(`PatientSex is an invalid value: T`);
+  });
 });

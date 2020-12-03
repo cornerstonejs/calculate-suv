@@ -2,6 +2,9 @@ import { calculateSUVScalingFactors } from '../src';
 import { InstanceMetadata } from '../src/types';
 
 let input: InstanceMetadata[];
+let inputPhilips: InstanceMetadata[];
+let multiInput: InstanceMetadata[];
+let inputSULFactor: InstanceMetadata[];
 
 describe('calculateSUVScalingFactors', () => {
   beforeEach(() => {
@@ -10,14 +13,54 @@ describe('calculateSUVScalingFactors', () => {
         CorrectedImage: ['ATTN', 'DECY'],
         Units: 'BQML',
         RadionuclideHalfLife: 10,
-        RadiopharmaceuticalStartDateTime: 'some date?',
+        RadiopharmaceuticalStartDateTime: '20201023095417',
         RadionuclideTotalDose: 100,
         DecayCorrection: 'ADMIN',
         PatientWeight: 100,
-        SeriesTime: '110010',
-        SeriesDate: '110010',
-        AcquisitionTime: '110010',
-        AcquisitionDate: '110010',
+        SeriesTime: '095417',
+        SeriesDate: '20201023',
+        AcquisitionTime: '095417',
+        AcquisitionDate: '20201023',
+        PhilipsPETPrivateGroup: {
+          SUVScaleFactor: 0.000551,
+          ActivityConcentrationScaleFactor: 1.602563,
+        },
+      },
+    ];
+    inputSULFactor = [
+      {
+        CorrectedImage: ['ATTN', 'DECY'],
+        Units: 'BQML',
+        RadionuclideHalfLife: 10,
+        RadiopharmaceuticalStartDateTime: '20201023095417',
+        RadionuclideTotalDose: 100,
+        DecayCorrection: 'ADMIN',
+        PatientWeight: 75,
+        SeriesTime: '095417',
+        SeriesDate: '20201023',
+        AcquisitionTime: '095417',
+        AcquisitionDate: '20201023',
+        PatientSex: 'M',
+        PatientSize: 32,
+      },
+    ];
+    inputPhilips = [
+      {
+        CorrectedImage: ['ATTN', 'DECY'],
+        Units: 'CNTS',
+        RadionuclideHalfLife: 10,
+        RadiopharmaceuticalStartDateTime: '20201023095417',
+        RadionuclideTotalDose: 100,
+        DecayCorrection: 'ADMIN',
+        PatientWeight: 100,
+        SeriesTime: '095417',
+        SeriesDate: '20201023',
+        AcquisitionTime: '095417',
+        AcquisitionDate: '20201023',
+        PhilipsPETPrivateGroup: {
+          SUVScaleFactor: 0,
+          ActivityConcentrationScaleFactor: 1.602563,
+        },
       },
     ];
   });
@@ -26,6 +69,26 @@ describe('calculateSUVScalingFactors', () => {
     input[0].Units = 'GML';
 
     expect(calculateSUVScalingFactors(input)).toEqual([{ suvFactor: 1.0 }]);
+  });
+
+  it('returns 0.000551 if Units are CNTS (PhilipsPETPrivateGroup SUVScaleFactor available)', () => {
+    input[0].Units = 'CNTS';
+
+    expect(calculateSUVScalingFactors(input)).toEqual([
+      { suvFactor: 0.000551 },
+    ]);
+  });
+
+  it('returns 1602.5629999999999 if Units are CNTS (PhilipsPETPrivateGroup SUVScaleFactor not available)', () => {
+    expect(calculateSUVScalingFactors(inputPhilips)).toEqual([
+      { suvFactor: 1602.5629999999999 },
+    ]);
+  });
+
+  it('returns sulFactor 1038.3343153669791 and suvFactor 750 if applying SUL factors', () => {
+    expect(calculateSUVScalingFactors(inputSULFactor)).toEqual([
+      { sulFactor: 1038.3343153669791, suvFactor: 750 },
+    ]);
   });
 });
 
@@ -36,14 +99,61 @@ describe('calculateSUVScalingFactor Error Handling', () => {
         CorrectedImage: ['ATTN', 'DECY'],
         Units: 'BQML',
         RadionuclideHalfLife: 10,
-        RadiopharmaceuticalStartDateTime: 'some date?',
+        RadiopharmaceuticalStartDateTime: '20201023095417',
         RadionuclideTotalDose: 100,
         DecayCorrection: 'ADMIN',
         PatientWeight: 100,
-        SeriesTime: '110010',
-        SeriesDate: '110010',
-        AcquisitionTime: '110010',
-        AcquisitionDate: '110010',
+        SeriesTime: '095417',
+        SeriesDate: '20201023',
+        AcquisitionTime: '095417',
+        AcquisitionDate: '20201023',
+      },
+    ];
+    multiInput = [
+      {
+        CorrectedImage: ['ATTN', 'DECY'],
+        Units: 'BQML',
+        RadionuclideHalfLife: 10,
+        RadiopharmaceuticalStartDateTime: '20201023095417',
+        RadionuclideTotalDose: 100,
+        DecayCorrection: 'ADMIN',
+        PatientWeight: 100,
+        SeriesTime: '095417',
+        SeriesDate: '20201023',
+        AcquisitionTime: '095417',
+        AcquisitionDate: '20201023',
+      },
+      {
+        CorrectedImage: ['ATTN', 'DECY'],
+        Units: 'BQML',
+        RadionuclideHalfLife: 11,
+        RadiopharmaceuticalStartDateTime: '20201023095417',
+        RadionuclideTotalDose: 100,
+        DecayCorrection: 'ADMIN',
+        PatientWeight: 100,
+        SeriesTime: '095417',
+        SeriesDate: '20201023',
+        AcquisitionTime: '095417',
+        AcquisitionDate: '20201023',
+      },
+    ];
+    inputPhilips = [
+      {
+        CorrectedImage: ['ATTN', 'DECY'],
+        Units: 'CNTS',
+        RadionuclideHalfLife: 10,
+        RadiopharmaceuticalStartDateTime: '20201023095417',
+        RadionuclideTotalDose: 100,
+        DecayCorrection: 'ADMIN',
+        PatientWeight: 100,
+        SeriesTime: '095417',
+        SeriesDate: '20201023',
+        AcquisitionTime: '095417',
+        AcquisitionDate: '20201023',
+        PhilipsPETPrivateGroup: {
+          SUVScaleFactor: 0,
+          ActivityConcentrationScaleFactor: 0,
+        },
       },
     ];
   });
@@ -64,5 +174,31 @@ describe('calculateSUVScalingFactor Error Handling', () => {
     expect(() => {
       calculateSUVScalingFactors(input);
     }).toThrowError(`Units has an invalid value: ${input[0].Units}`);
+  });
+
+  it('throws an Error if Decay time is negative', () => {
+    input[0].RadiopharmaceuticalStartDateTime = '20201023115417';
+
+    expect(() => {
+      calculateSUVScalingFactors(input);
+    }).toThrowError('Decay time cannot be less than zero');
+  });
+
+  it('throws an Error if series-level metadata are different', () => {
+    expect(() => {
+      calculateSUVScalingFactors(multiInput);
+    }).toThrowError(
+      'The set of instances does not appear to come from one Series. Every instance must have identical values for series-level metadata properties'
+    );
+  });
+
+  it('throws an Error if Philips has no ValidSUVScaleFactor and ValidActivityConcentrationScaleFactor', () => {
+    expect(() => {
+      calculateSUVScalingFactors(inputPhilips);
+    }).toThrowError(
+      `Units are in CNTS, but PhilipsPETPrivateGroup has invalid values: ${JSON.stringify(
+        inputPhilips[0].PhilipsPETPrivateGroup
+      )}`
+    );
   });
 });

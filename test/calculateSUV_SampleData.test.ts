@@ -1,5 +1,4 @@
 import readDICOMFolder from './readDICOMFolder';
-import readNifti from './readNifti';
 
 import { calculateSUVScalingFactors } from '../src';
 import dcmjs from 'dcmjs';
@@ -11,97 +10,60 @@ dcmjs.log.disable();
 // Note: Converted everything to Implicit Little Endian Transfer Syntax:
 // find . -maxdepth 1 -type f -print0 | parallel -0 dcmconv +ti {1} {1}
 const sampleDataPaths: string[] = [
-  // Working:
-  'PHILIPS_BQML', // Units = BQML. Philips Private Group present, but intentionally not used
-  'PHILIPS_CNTS_&_BQML_SUV', // Units = CNTS (TBD: Not sure what & BQML refers to? includes private grp?)
-  'PHILIPS_CNTS_AND_SUV', // Units = CNTS
-  'SIEMENS', // TODO: Write down characteristics of this data
-  'GE_MEDICAL_AND_BQML', // TODO: Write down characteristics of this data
+  'PHILIPS_BQML',
+  'PHILIPS_CNTS_&_BQML_SUV',
+  'PHILIPS_CNTS_AND_SUV',
+  'SIEMENS',
+  'GE_MEDICAL_AND_BQML',
   'BQML_AC_DT_<_S_DT + SIEMENS',
   'CPS_AND_BQML_AC_DT_-_S_DT',
   'RADIOPHARM_DATETIME_UNDEFINED',
-  // last three do not match Salim's ground truth, because he truncates the time at seconds precision,
-  // while we recover the time at microseconds precision. Lowering the precision replicates Salim's ground truth.
-  // reference: https://github.com/wendyrvllr/Dicom-To-CNN/blob/wendy/library_dicom/dicom_processor/model/SeriesPT.py
 ];
 
 // Note: sample data must be organized as
 // folderName / dicom / all dicom files
-// folderName / groundTruth.nii
 
-function approximatelyEqual(
-  arr1: Float64Array,
-  arr2: Float64Array,
-  epsilon = 1e-3 // Way too large
-) {
-  if (arr1.length !== arr2.length) {
-    throw new Error('Arrays are not the same length?');
-  }
-
-  const len = arr1.length;
-
-  for (let i = 0; i < len; i++) {
-    const diff = Math.abs(arr1[i] - arr2[i]);
-    if (diff > epsilon) {
-      return false;
-    }
-  }
-
-  return true;
-}
 sampleDataPaths.forEach(folder => {
-  const groundTruthPath = `./test/data/${folder}/groundTruth.nii`;
   const dicomFolder = `./test/data/${folder}/dicom`;
+  const precomputedSUVFactors = new Map();
+  precomputedSUVFactors.set('PHILIPS_BQML', 0.0007463747013889488);
+  precomputedSUVFactors.set('PHILIPS_CNTS_&_BQML_SUV', 0.000551);
+  precomputedSUVFactors.set('PHILIPS_CNTS_AND_SUV', 0.000728);
+  precomputedSUVFactors.set('SIEMENS', 0.00042748316187197236);
+  precomputedSUVFactors.set('GE_MEDICAL_AND_BQML', 0.0005367387681819742);
+  precomputedSUVFactors.set(
+    'BQML_AC_DT_<_S_DT + SIEMENS',
+    0.0004069156854009332
+  );
+  precomputedSUVFactors.set(
+    'CPS_AND_BQML_AC_DT_-_S_DT',
+    0.00026503312764157046
+  );
+  precomputedSUVFactors.set(
+    'RADIOPHARM_DATETIME_UNDEFINED',
+    0.0003721089202818729
+  );
+  /// at the moment for a dataset, each frame has always the same SUV factor.
+  /// 'BQML_AC_DT_<_S_DT + SIEMENS' will have eventually a SUV factor value for each frame,
+  /// in that case this test will need to be update by comparing the SUV factors of the frames with precomputed ones.
 
-  describe(`calculateSUVScalingFactors: ${folder}`, () => {
-    it('matches the ground truth SUV values', () => {
+  describe(`calculateSUVScalingFactors from dicom: ${folder}`, () => {
+    it('matches the known, precomputed, SUV values', () => {
       // Arrange
-      // 1. Read underlying ground truth and input data
-      const groundTruthSUV = readNifti(groundTruthPath);
-      const {
-        instanceMetadata,
-        instanceRescale,
-        pixelDataTypedArray,
-        frameLength,
-        numFrames,
-      } = readDICOMFolder(dicomFolder);
+      // 1. Read underlying input dicom data
+      const { instanceMetadata } = readDICOMFolder(dicomFolder);
 
       // Act
       // 2. Calculate scaleFactor from the metadata
-      // 3. Scale original data and insert into an Arraybuffer
       const scalingFactors = calculateSUVScalingFactors(instanceMetadata);
-      const scaledPixelData = new Float64Array(frameLength * numFrames);
-      let groundTruthTotal = 0;
-      let scaledTotal = 0;
-      let diff = 0;
-
-      for (let i = 0; i < numFrames; i++) {
-        for (let j = 0; j < frameLength; j++) {
-          const voxelIndex = i * frameLength + j;
-
-          // Multiply by the per-frame scaling factor
-          const rescaled =
-            pixelDataTypedArray[voxelIndex] * instanceRescale[i].RescaleSlope +
-            instanceRescale[i].RescaleIntercept;
-          scaledPixelData[voxelIndex] = rescaled * scalingFactors[i].suvFactor;
-
-          groundTruthTotal += groundTruthSUV[voxelIndex];
-          scaledTotal += scaledPixelData[voxelIndex];
-          diff += Math.abs(
-            scaledPixelData[voxelIndex] - groundTruthSUV[voxelIndex]
-          );
-        }
-      }
-
-      console.log('avg diff across all voxels');
-      console.log(diff / (frameLength * numFrames));
-
-      console.log('total of scaled / total of ground truth voxels');
-      console.log(scaledTotal / groundTruthTotal);
 
       // Assert
-      // 4. Check approximate equality between ground truth SUV and our result
-      expect(approximatelyEqual(groundTruthSUV, scaledPixelData)).toEqual(true);
+      // 3. Check approximate equality between ground truth SUV and our result
+      expect(
+        Math.abs(
+          scalingFactors[0].suvFactor - precomputedSUVFactors.get(`${folder}`)
+        ) < 1e-6
+      ).toEqual(true);
     });
   });
 });
