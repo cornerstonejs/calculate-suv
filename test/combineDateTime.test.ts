@@ -75,7 +75,7 @@ describe('combineDateTime', () => {
     // Act
     const date = new FullDateInterface(string);
     const timeInSec = date.getTimeInSec();
-    
+
     // Assert
     const dateJS = new Date('2020-02-27T00:00:00.000000Z');
     const expected = dateJS.getTime() / 1000 + 1 * 3600 + 20 * 60;
@@ -89,7 +89,7 @@ describe('combineDateTime', () => {
     // Act
     const date = new FullDateInterface(string);
     const timeInSec = date.getTimeInSec();
-    
+
     // Assert
     const dateJS = new Date('2020-02-27T00:00:00.000000Z');
     const expected = dateJS.getTime() / 1000 + 1 * 3600;
