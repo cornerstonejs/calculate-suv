@@ -68,6 +68,34 @@ describe('combineDateTime', () => {
     expect(timeInSec).toEqual(expected);
   });
 
+  it('should properly return the time in sec', () => {
+    // Arrange
+    const string = '2020-02-27T01:20Z';
+
+    // Act
+    const date = new FullDateInterface(string);
+    const timeInSec = date.getTimeInSec();
+    
+    // Assert
+    const dateJS = new Date('2020-02-27T00:00:00.000000Z');
+    const expected = dateJS.getTime() / 1000 + 1 * 3600 + 20 * 60;
+    expect(timeInSec).toEqual(expected);
+  });
+
+  it('should properly return the time in sec', () => {
+    // Arrange
+    const string = '2020-02-27T01Z';
+
+    // Act
+    const date = new FullDateInterface(string);
+    const timeInSec = date.getTimeInSec();
+    
+    // Assert
+    const dateJS = new Date('2020-02-27T00:00:00.000000Z');
+    const expected = dateJS.getTime() / 1000 + 1 * 3600;
+    expect(timeInSec).toEqual(expected);
+  });
+
   it('should properly return the time in microsec', () => {
     // Arrange
     const date = {

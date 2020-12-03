@@ -34,7 +34,8 @@ export default function calculateScanTimes(
     seriesTime
   );
 
-  let earliestAcquisitionDateTime: FullDateInterface | undefined;
+  let earliestAcquisitionDateTime = new FullDateInterface(`3000-01-01T00:00:00.000000Z`);
+  let timeError = earliestAcquisitionDateTime.getTimeInSec();
   instances.forEach(instance => {
     const { AcquisitionDate, AcquisitionTime } = instance;
 
@@ -45,7 +46,7 @@ export default function calculateScanTimes(
       acquisitionTime
     );
 
-    if (!earliestAcquisitionDateTime) {
+    if (earliestAcquisitionDateTime.getTimeInSec() >= timeError) {
       earliestAcquisitionDateTime = acquisitionDateTime;
     } else {
       earliestAcquisitionDateTime =
@@ -56,8 +57,8 @@ export default function calculateScanTimes(
     }
   });
 
-  if (!earliestAcquisitionDateTime) {
-    throw new Error('Scan time could not be calculated.');
+  if (earliestAcquisitionDateTime.getTimeInSec() >= timeError) {
+    throw new Error('Earliest acquisition time or date could not be parsed.');
   }
 
   if (
