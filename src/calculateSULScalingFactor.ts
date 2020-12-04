@@ -1,3 +1,9 @@
+/**
+ * Javascript object with patient properties size, sez, weight
+ *
+ * @export
+ * @interface SULScalingFactorInput
+ */
 export interface SULScalingFactorInput {
   PatientSize: number;
   PatientSex: string; //'M' | 'F';
@@ -10,7 +16,7 @@ export default function calculateSULScalingFactor(
   const { PatientSex, PatientWeight, PatientSize } = inputs;
 
   let sulFactor;
-  const bodyMassIndex = PatientWeight / Math.pow(PatientSize, 2);
+  const bodyMassIndex = PatientWeight / (PatientSize * PatientSize);
   if (PatientSex === 'F') {
     sulFactor = 9270 / (8780 + 244 * bodyMassIndex);
   } else if (PatientSex === 'M') {

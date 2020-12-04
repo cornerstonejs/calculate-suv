@@ -1,3 +1,9 @@
+/**
+ * Javascript object with properties for hours, minutes, seconds and fractionalSeconds
+ *
+ * @export
+ * @interface TimeInterface
+ */
 export interface TimeInterface {
   hours?: number;
   minutes?: number;

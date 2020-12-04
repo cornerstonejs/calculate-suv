@@ -1,4 +1,11 @@
-// algorithm based on http://stackoverflow.com/questions/1433030/validate-number-of-days-in-a-given-month
+/**
+ * Check the number of days for a picked month and year
+ * algorithm based on http://stackoverflow.com/questions/1433030/validate-number-of-days-in-a-given-month
+ *
+ * @param {number} m
+ * @param {number} y
+ * @return {*} number of days
+ */
 function daysInMonth(m: number, y: number) {
   // m is 0 indexed: 0-11
   switch (m) {
@@ -14,6 +21,14 @@ function daysInMonth(m: number, y: number) {
   }
 }
 
+/**
+ * Check if the date is valid
+ *
+ * @param {number} d
+ * @param {number} m
+ * @param {number} y
+ * @return {*} boolean result
+ */
 function isValidDate(d: number, m: number, y: number) {
   // make year is a number
   if (isNaN(y)) {
@@ -23,6 +38,12 @@ function isValidDate(d: number, m: number, y: number) {
   return m > 0 && m <= 12 && d > 0 && d <= daysInMonth(m, y);
 }
 
+/**
+ * Javascript object with properties year, month and day
+ *
+ * @export
+ * @interface DateInterface
+ */
 export interface DateInterface {
   year: number;
   month: number;

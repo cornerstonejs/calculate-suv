@@ -5,12 +5,23 @@ import { calculateStartTime } from './calculateStartTime';
 import { SULScalingFactorInput } from './calculateSULScalingFactor';
 import { InstanceMetadata } from './types';
 
-// TODO, the result property names may changes
+/**
+ * Javascript object containing the SUV and SUL factors.
+ * TODO, the result property names may changes
+ *
+ * @interface ScalingFactorResult
+ */
 interface ScalingFactorResult {
   suvFactor: number;
   sulFactor?: number;
 }
 
+/**
+ * Perfom scale factor calculation if the DICOM unit is 'BQML'
+ *
+ * @param {InstanceMetadata[]} instances
+ * @return {*}  {number[]}
+ */
 function _calculateBQMLScaleFactor(instances: InstanceMetadata[]): number[] {
   const {
     RadionuclideTotalDose,
@@ -56,10 +67,14 @@ function arrayEquals(a: any[], b: any[]): boolean {
 }
 
 /**
+ * Calculate the SUV factor
  *
  * Note: Rescale Slope / Intercept must still be applied. These must be applied
  *       on a per-Frame basis, since some scanners may have different values per Frame.
- * @param instances
+ *
+ * @export
+ * @param {InstanceMetadata[]} instances
+ * @return {*}  {ScalingFactorResult[]}
  */
 export default function calculateSUVScalingFactors(
   instances: InstanceMetadata[]

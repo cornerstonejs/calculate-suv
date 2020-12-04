@@ -1,8 +1,13 @@
 import combineDateTime, { FullDateInterface } from './combineDateTime';
 import parseDA, { DateInterface } from './parseDA';
 import parseTM, { TimeInterface } from './parseTM';
-import dateTimeToJSDate from './dateTimeToJSDate';
+import dateTimeToFullDateInterface from './dateTimeToFullDateInterface';
 
+/**
+ * Javascript object with scan properties
+ *
+ * @interface InstanceMetadataForScanTimes
+ */
 interface InstanceMetadataForScanTimes {
   SeriesDate: string;
   SeriesTime: string;
@@ -18,6 +23,13 @@ interface InstanceMetadataForScanTimes {
   ActualFrameDuration?: number;
 }
 
+/**
+ * Calcualte the scan times
+ *
+ * @export
+ * @param {InstanceMetadataForScanTimes[]} instances
+ * @return {*}  {FullDateInterface[]}
+ */
 export default function calculateScanTimes(
   instances: InstanceMetadataForScanTimes[]
 ): FullDateInterface[] {
@@ -70,7 +82,9 @@ export default function calculateScanTimes(
   } else {
     if (GEPrivatePostInjectionDateTime) {
       // GE Private scan
-      return results.fill(dateTimeToJSDate(GEPrivatePostInjectionDateTime));
+      return results.fill(
+        dateTimeToFullDateInterface(GEPrivatePostInjectionDateTime)
+      );
     } else {
       const hasValidFrameTimes = instances.every(instance => {
         return (

@@ -1,16 +1,31 @@
 import { DateInterface } from './parseDA';
 import { TimeInterface } from './parseTM';
 
+/**
+ * Javascript object that handles dates and compute the time.
+ *
+ * @export
+ * @class FullDateInterface
+ */
 export class FullDateInterface {
   fullDate: string;
 
+  /**
+   * Creates an instance of FullDateInterface.
+   * @param {string} date formatted as yyyy-mm-ddTHH:MM:SS.FFFFFFZ
+   * @memberof FullDateInterface
+   */
   constructor(date: string) {
     this.fullDate = date;
   }
 
+  /**
+   * returns time since 1 january 1970
+   *
+   * @return {*} {number} time in sec
+   * @memberof FullDateInterface
+   */
   getTimeInSec(): number {
-    // returns time as seconds since 1 january 1970
-
     // yyyy-mm-ddTHH:MM:SS.FFFFFFZ
     const dateString = this.fullDate.substring(0, 10);
     const timeString = this.fullDate.substring(11, 28);
@@ -85,6 +100,12 @@ export class FullDateInterface {
     return timeInSec;
   }
 
+  /**
+   * returns time since 1 january 1970
+   *
+   * @return {*} {number} time in microsec
+   * @memberof FullDateInterface
+   */
   getTimeInMicroSec(): number {
     const timeInMicroSec = this.getTimeInSec() * 1e6;
     return timeInMicroSec;
@@ -95,6 +116,14 @@ export interface FullDateInterface {
   date: string;
 }
 
+/**
+ * Combines two javascript objects containing the date and time information
+ *
+ * @export
+ * @param {DateInterface} date
+ * @param {TimeInterface} time
+ * @return {*} {FullDateInterface}
+ */
 export default function combineDateTime(
   date: DateInterface,
   time: TimeInterface

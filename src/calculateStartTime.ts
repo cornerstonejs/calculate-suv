@@ -1,8 +1,19 @@
 import combineDateTime, { FullDateInterface } from './combineDateTime';
 import { parseDA, DateInterface } from './parseDA';
 import { parseTM, TimeInterface } from './parseTM';
-import dateTimeToJSDate from './dateTimeToJSDate';
+import dateTimeToFullDateInterface from './dateTimeToFullDateInterface';
 
+/**
+ * Calculate start time
+ *
+ * @export
+ * @param {{
+ *   RadiopharmaceuticalStartDateTime?: string;
+ *   RadiopharmaceuticalStartTime?: string;
+ *   SeriesDate?: string;
+ * }} input
+ * @return {*}  {FullDateInterface}
+ */
 export default function calculateStartTime(input: {
   RadiopharmaceuticalStartDateTime?: string;
   RadiopharmaceuticalStartTime?: string;
@@ -17,7 +28,7 @@ export default function calculateStartTime(input: {
   let time: TimeInterface;
   let date: DateInterface;
   if (RadiopharmaceuticalStartDateTime) {
-    return dateTimeToJSDate(RadiopharmaceuticalStartDateTime);
+    return dateTimeToFullDateInterface(RadiopharmaceuticalStartDateTime);
   } else if (RadiopharmaceuticalStartTime && SeriesDate) {
     // start Date	is not explicit - assume	same as	Series Date;
     // but consider	spanning midnight

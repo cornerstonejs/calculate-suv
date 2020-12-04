@@ -1,8 +1,20 @@
+/**
+ * Philips specific dicom header metadata
+ *
+ * @export
+ * @interface PhilipsPETPrivateGroup
+ */
 export interface PhilipsPETPrivateGroup {
   SUVScaleFactor: number | undefined; // 0x7053,0x1000
   ActivityConcentrationScaleFactor: number | undefined; // 0x7053,0x1009
 }
 
+/**
+ * Dicom header metadata
+ *
+ * @export
+ * @interface InstanceMetadata
+ */
 export interface InstanceMetadata {
   CorrectedImage: string[];
   Units: string; // 'BQML' | 'CNTS' | 'GML'; // Units (0x0054,0x1001)

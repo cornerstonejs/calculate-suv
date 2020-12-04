@@ -1,5 +1,5 @@
 import calculateScanTimes from '../src/calculateScanTimes';
-import dateTimeToJSDate from '../src/dateTimeToJSDate';
+import dateTimeToFullDateInterface from '../src/dateTimeToFullDateInterface';
 
 describe('calculateScanTimes', () => {
   describe('when SeriesData and AcquisitionDate match and SeriesTime is earlier than AcquisitionTime', () => {
@@ -32,7 +32,9 @@ describe('calculateScanTimes', () => {
       const scanDateTimes = calculateScanTimes(instances);
 
       // Assert
-      const earliestDateTime = dateTimeToJSDate(`${SeriesDate}${SeriesTime}`);
+      const earliestDateTime = dateTimeToFullDateInterface(
+        `${SeriesDate}${SeriesTime}`
+      );
 
       scanDateTimes.forEach(scanDateTime => {
         expect(scanDateTime).toEqual(earliestDateTime);
@@ -73,7 +75,9 @@ describe('calculateScanTimes', () => {
       const scanDateTimes = calculateScanTimes(instances);
 
       // Assert
-      const earliestDateTime = dateTimeToJSDate(`${SeriesDate}${SeriesTime}`);
+      const earliestDateTime = dateTimeToFullDateInterface(
+        `${SeriesDate}${SeriesTime}`
+      );
 
       scanDateTimes.forEach(scanDateTime => {
         expect(scanDateTime).toEqual(earliestDateTime);
@@ -112,7 +116,9 @@ describe('calculateScanTimes', () => {
       const scanDateTimes = calculateScanTimes(instances);
 
       // Assert
-      const earliestDateTime = dateTimeToJSDate(`${SeriesDate}${SeriesTime}`);
+      const earliestDateTime = dateTimeToFullDateInterface(
+        `${SeriesDate}${SeriesTime}`
+      );
 
       scanDateTimes.forEach(scanDateTime => {
         expect(scanDateTime).toEqual(earliestDateTime);
@@ -151,7 +157,9 @@ describe('calculateScanTimes', () => {
       const scanDateTimes = calculateScanTimes(instances);
 
       // Assert
-      const earliestDateTime = dateTimeToJSDate(`${SeriesDate}${SeriesTime}`);
+      const earliestDateTime = dateTimeToFullDateInterface(
+        `${SeriesDate}${SeriesTime}`
+      );
 
       scanDateTimes.forEach(scanDateTime => {
         expect(scanDateTime).toEqual(earliestDateTime);
@@ -180,7 +188,9 @@ describe('calculateScanTimes', () => {
       const scanDateTimes = calculateScanTimes(instances);
 
       // Assert
-      const GEDateTime = dateTimeToJSDate(GEPrivatePostInjectionDateTime);
+      const GEDateTime = dateTimeToFullDateInterface(
+        GEPrivatePostInjectionDateTime
+      );
 
       scanDateTimes.forEach(scanDateTime => {
         expect(scanDateTime).toEqual(GEDateTime);
