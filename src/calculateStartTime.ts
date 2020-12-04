@@ -12,7 +12,7 @@ import dateTimeToFullDateInterface from './dateTimeToFullDateInterface';
  *   RadiopharmaceuticalStartTime?: string;
  *   SeriesDate?: string;
  * }} input
- * @return {*}  {FullDateInterface}
+ * @returns {FullDateInterface}
  */
 export default function calculateStartTime(input: {
   RadiopharmaceuticalStartDateTime?: string;

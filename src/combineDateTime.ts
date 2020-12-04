@@ -22,7 +22,7 @@ export class FullDateInterface {
   /**
    * returns time since 1 january 1970
    *
-   * @return {*} {number} time in sec
+   * @returns {number} time in sec
    * @memberof FullDateInterface
    */
   getTimeInSec(): number {
@@ -103,7 +103,7 @@ export class FullDateInterface {
   /**
    * returns time since 1 january 1970
    *
-   * @return {*} {number} time in microsec
+   * @returns {number} time in microsec
    * @memberof FullDateInterface
    */
   getTimeInMicroSec(): number {
@@ -122,7 +122,7 @@ export interface FullDateInterface {
  * @export
  * @param {DateInterface} date
  * @param {TimeInterface} time
- * @return {*} {FullDateInterface}
+ * @returns {FullDateInterface}
  */
 export default function combineDateTime(
   date: DateInterface,

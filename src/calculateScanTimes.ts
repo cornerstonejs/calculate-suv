@@ -28,7 +28,7 @@ interface InstanceMetadataForScanTimes {
  *
  * @export
  * @param {InstanceMetadataForScanTimes[]} instances
- * @return {*}  {FullDateInterface[]}
+ * @returns {FullDateInterface[]}
  */
 export default function calculateScanTimes(
   instances: InstanceMetadataForScanTimes[]

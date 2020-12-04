@@ -20,7 +20,7 @@ interface ScalingFactorResult {
  * Perfom scale factor calculation if the DICOM unit is 'BQML'
  *
  * @param {InstanceMetadata[]} instances
- * @return {*}  {number[]}
+ * @returns {number[]}
  */
 function _calculateBQMLScaleFactor(instances: InstanceMetadata[]): number[] {
   const {
@@ -74,7 +74,7 @@ function arrayEquals(a: any[], b: any[]): boolean {
  *
  * @export
  * @param {InstanceMetadata[]} instances
- * @return {*}  {ScalingFactorResult[]}
+ * @returns {ScalingFactorResult[]}
  */
 export default function calculateSUVScalingFactors(
   instances: InstanceMetadata[]

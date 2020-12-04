@@ -4,7 +4,7 @@
  *
  * @param {number} m
  * @param {number} y
- * @return {*} number of days
+ * @returns {number} number of days
  */
 function daysInMonth(m: number, y: number) {
   // m is 0 indexed: 0-11
@@ -27,7 +27,7 @@ function daysInMonth(m: number, y: number) {
  * @param {number} d
  * @param {number} m
  * @param {number} y
- * @return {*} boolean result
+ * @returns {boolean} boolean result
  */
 function isValidDate(d: number, m: number, y: number) {
   // make year is a number
@@ -54,7 +54,7 @@ export interface DateInterface {
  * Parses a DA formatted string into a Javascript object
  * @param {string} date a string in the DA VR format
  * @param {boolean} [validate] - true if an exception should be thrown if the date is invalid
- * @returns {*} Javascript object with properties year, month and day or undefined if not present or not 8 bytes long
+ * @returns {DateInterface} Javascript object with properties year, month and day or undefined if not present or not 8 bytes long
  */
 export default function parseDA(date: string): DateInterface {
   if (!date || date.length !== 8) {

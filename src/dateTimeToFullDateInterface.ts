@@ -7,7 +7,7 @@ import parseTM from './parseTM';
  *
  * @export
  * @param {string} dateTime
- * @return {*}  {FullDateInterface}
+ * @returns {FullDateInterface}
  */
 export default function dateTimeToFullDateInterface(
   dateTime: string
