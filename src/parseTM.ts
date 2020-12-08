@@ -17,7 +17,7 @@ export interface TimeInterface {
  * @returns {string} javascript object with properties for hours, minutes, seconds and fractionalSeconds or undefined if no element or data.  Missing fields are set to undefined
  */
 export default function parseTM(time: string): TimeInterface {
-  if (time.length < 2) {
+  if (!time || time.length < 2 || typeof time !== 'string') {
     // must at least have HH
     throw new Error(`invalid TM '${time}'`);
   }

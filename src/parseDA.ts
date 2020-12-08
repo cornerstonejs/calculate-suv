@@ -57,7 +57,7 @@ export interface DateInterface {
  * @returns {DateInterface} Javascript object with properties year, month and day or undefined if not present or not 8 bytes long
  */
 export default function parseDA(date: string): DateInterface {
-  if (!date || date.length !== 8) {
+  if (!date || date.length !== 8 || typeof date !== 'string') {
     throw new Error(`invalid DA '${date}'`);
   }
 

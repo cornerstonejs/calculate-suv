@@ -16,6 +16,9 @@ export class FullDateInterface {
    * @memberof FullDateInterface
    */
   constructor(date: string) {
+    if (!date || typeof date !== 'string') {
+      throw new Error(`FullDateInterface constructor: invalid date '${date}'`);
+    }
     this.fullDate = date;
   }
 
