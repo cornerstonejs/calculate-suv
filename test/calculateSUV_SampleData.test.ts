@@ -61,7 +61,7 @@ sampleDataPaths.forEach(folder => {
       // 3. Check approximate equality between ground truth SUV and our result
       expect(
         Math.abs(
-          scalingFactors[0].suvFactor - precomputedSUVFactors.get(`${folder}`)
+          scalingFactors[0].suvbw - precomputedSUVFactors.get(`${folder}`)
         ) < 1e-6
       ).toEqual(true);
     });

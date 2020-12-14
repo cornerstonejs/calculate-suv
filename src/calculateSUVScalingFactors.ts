@@ -1,8 +1,10 @@
 import { FullDateInterface } from './combineDateTime';
 import { calculateScanTimes } from './calculateScanTimes';
-import calculateSULScalingFactor from './calculateSULScalingFactor';
+import calculateSUVlbmScalingFactor from './calculateSUVlbmScalingFactor';
+import { SUVlbmScalingFactorInput } from './calculateSUVlbmScalingFactor';
+import calculateSUVbsaScalingFactor from './calculateSUVbsaScalingFactor';
+import { SUVbsaScalingFactorInput } from './calculateSUVbsaScalingFactor';
 import { calculateStartTime } from './calculateStartTime';
-import { SULScalingFactorInput } from './calculateSULScalingFactor';
 import { InstanceMetadata } from './types';
 
 /**
@@ -12,23 +14,24 @@ import { InstanceMetadata } from './types';
  * @interface ScalingFactorResult
  */
 interface ScalingFactorResult {
-  suvFactor: number;
-  sulFactor?: number;
+  suvbw: number;
+  suvlbm?: number;
+  suvbsa?: number;
 }
 
 /**
- * Perfom scale factor calculation if the DICOM unit is 'BQML'
+ * The injected dose used to calculate SUV is corrected for the
+ * decay that occurs between the time of injection and the start of the scan
  *
  * @param {InstanceMetadata[]} instances
  * @returns {number[]}
  */
-function _calculateBQMLScaleFactor(instances: InstanceMetadata[]): number[] {
+function calculateDecayCorrection(instances: InstanceMetadata[]): number[] {
   const {
     RadionuclideTotalDose,
     RadionuclideHalfLife,
     RadiopharmaceuticalStartDateTime,
     RadiopharmaceuticalStartTime,
-    PatientWeight,
     SeriesDate,
   } = instances[0];
 
@@ -51,9 +54,7 @@ function _calculateBQMLScaleFactor(instances: InstanceMetadata[]): number[] {
       RadionuclideTotalDose *
       Math.pow(2, -decayTimeInSec / RadionuclideHalfLife);
 
-    const weightInGrams: number = PatientWeight * 1000;
-
-    return weightInGrams / decayedDose;
+    return 1 / decayedDose;
   });
 }
 
@@ -118,11 +119,16 @@ export default function calculateSUVScalingFactors(
     );
   }
 
+  let decayCorrectionArray: number[] = new Array(instances.length);
+  decayCorrectionArray = calculateDecayCorrection(instances);
+
   let results: number[] = new Array(instances.length);
+  const weightInGrams: number = PatientWeight * 1000;
 
   if (Units === 'BQML') {
-    // Need to get the reference time from the metadata for all instances in the series
-    results = _calculateBQMLScaleFactor(instances);
+    results = decayCorrectionArray.map(function(value) {
+      return value * weightInGrams;
+    });
   } else if (Units === 'CNTS') {
     const hasValidSUVScaleFactor: boolean = instances.every(instance => {
       return (
@@ -155,10 +161,6 @@ export default function calculateSUVScalingFactors(
         instance => instance.PhilipsPETPrivateGroup!.SUVScaleFactor!
       );
     } else if (hasValidActivityConcentrationScaleFactor) {
-      // Note that for the Philips case these are probably all identical,
-      // but the function still returns an array.
-      const bqmlScaleFactors: number[] = _calculateBQMLScaleFactor(instances);
-
       // if (0x7053,0x1000) not present, but (0x7053,0x1009) is present, then (0x7053,0x1009) * Rescale Slope,
       // scales pixels to Bq/ml, and proceed as if Units are BQML
       results = instances.map((instance, index) => {
@@ -166,7 +168,8 @@ export default function calculateSUVScalingFactors(
         // in the .every loop above.
         return (
           instance.PhilipsPETPrivateGroup!.ActivityConcentrationScaleFactor! *
-          bqmlScaleFactors[index]
+          decayCorrectionArray[index] *
+          weightInGrams
         );
       });
     } else {
@@ -183,27 +186,46 @@ export default function calculateSUVScalingFactors(
     throw new Error(`Units has an invalid value: ${Units}`);
   }
 
-  let sulFactor: number | undefined;
+  // get BSA
+  let suvbsaFactor: number | undefined;
+  if (PatientWeight && PatientSize) {
+    const sulInputs: SUVbsaScalingFactorInput = {
+      PatientWeight,
+      PatientSize,
+    };
+
+    suvbsaFactor = calculateSUVbsaScalingFactor(sulInputs);
+  }
+
+  // get LBM
+  let suvlbmFactor: number | undefined;
   if (PatientWeight && PatientSex && PatientSize) {
-    const sulInputs: SULScalingFactorInput = {
+    const suvlbmInputs: SUVlbmScalingFactorInput = {
       PatientWeight,
       PatientSex,
       PatientSize,
     };
 
-    // TODO: Determine which SUV values we want to return
-    // e.g. lean body mass, body surface area...
-    sulFactor = calculateSULScalingFactor(sulInputs);
+    suvlbmFactor = calculateSUVlbmScalingFactor(suvlbmInputs);
   }
 
-  return results.map(result => {
+  return results.map(function(result, index) {
     const factors: ScalingFactorResult = {
-      suvFactor: result,
+      suvbw: result,
     };
 
-    if (sulFactor) {
-      factors.sulFactor = sulFactor * result;
+    if (suvbsaFactor) {
+      // multiply for BSA
+      factors.suvbsa = decayCorrectionArray[index] * suvbsaFactor;
     }
+
+    if (suvlbmFactor) {
+      // multiply for LBM
+      factors.suvlbm = decayCorrectionArray[index] * suvlbmFactor;
+    }
+
+    // factor formulaes taken from:
+    // https://www.medicalconnections.co.uk/kb/calculating-suv-from-pet-images/
 
     return factors;
   });

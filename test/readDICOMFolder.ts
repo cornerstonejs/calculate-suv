@@ -86,6 +86,7 @@ export default function readDICOMFolder(folder: string): DatasetReadResults {
         SeriesDate: dataset.SeriesDate,
         SeriesTime: dataset.SeriesTime,
         PatientSex: dataset.PatientSex,
+        PatientSize: dataset.PatientSize,
         PatientWeight: dataset.PatientWeight,
         AcquisitionDate: dataset.AcquisitionDate,
         AcquisitionTime: dataset.AcquisitionTime,

@@ -4,7 +4,7 @@ import { InstanceMetadata } from '../src/types';
 let input: InstanceMetadata[];
 let inputPhilips: InstanceMetadata[];
 let multiInput: InstanceMetadata[];
-let inputSULFactor: InstanceMetadata[];
+let inputlbmbsaFactor: InstanceMetadata[];
 
 describe('calculateSUVScalingFactors', () => {
   beforeEach(() => {
@@ -27,7 +27,7 @@ describe('calculateSUVScalingFactors', () => {
         },
       },
     ];
-    inputSULFactor = [
+    inputlbmbsaFactor = [
       {
         CorrectedImage: ['ATTN', 'DECY'],
         Units: 'BQML',
@@ -41,7 +41,7 @@ describe('calculateSUVScalingFactors', () => {
         AcquisitionTime: '095417',
         AcquisitionDate: '20201023',
         PatientSex: 'M',
-        PatientSize: 32,
+        PatientSize: 1.85,
       },
     ];
     inputPhilips = [
@@ -65,29 +65,27 @@ describe('calculateSUVScalingFactors', () => {
     ];
   });
 
-  it('returns 1.0 if Units are GML', () => {
+  it('returns suvbw 1.0 if Units are GML', () => {
     input[0].Units = 'GML';
 
-    expect(calculateSUVScalingFactors(input)).toEqual([{ suvFactor: 1.0 }]);
+    expect(calculateSUVScalingFactors(input)).toEqual([{ suvbw: 1.0 }]);
   });
 
-  it('returns 0.000551 if Units are CNTS (PhilipsPETPrivateGroup SUVScaleFactor available)', () => {
+  it('calculates suvbw if Units are CNTS (PhilipsPETPrivateGroup SUVScaleFactor available)', () => {
     input[0].Units = 'CNTS';
 
-    expect(calculateSUVScalingFactors(input)).toEqual([
-      { suvFactor: 0.000551 },
-    ]);
+    expect(calculateSUVScalingFactors(input)).toEqual([{ suvbw: 0.000551 }]);
   });
 
-  it('returns 1602.5629999999999 if Units are CNTS (PhilipsPETPrivateGroup SUVScaleFactor not available)', () => {
+  it('calculates suvbw if Units are CNTS (PhilipsPETPrivateGroup SUVScaleFactor not available)', () => {
     expect(calculateSUVScalingFactors(inputPhilips)).toEqual([
-      { suvFactor: 1602.5629999999999 },
+      { suvbw: 1602.5629999999999 },
     ]);
   });
 
-  it('returns sulFactor 1038.3343153669791 and suvFactor 750 if applying SUL factors', () => {
-    expect(calculateSUVScalingFactors(inputSULFactor)).toEqual([
-      { sulFactor: 1038.3343153669791, suvFactor: 750 },
+  it('calculates suvbsa, suvlbm and suvFactor if wieight, size and sex known', () => {
+    expect(calculateSUVScalingFactors(inputlbmbsaFactor)).toEqual([
+      { suvbw: 750, suvbsa: 198.13758427117767, suvlbm: 581.7567567567568 },
     ]);
   });
 });
