@@ -45,7 +45,6 @@ export class FullDateInterface {
       isNaN(yyyy) ||
       (mm !== undefined && isNaN(mm)) ||
       (dd !== undefined && isNaN(dd)) ||
-      yyyy < 1970 ||
       yyyy > 3000 ||
       (mm && (mm < 1 || mm > 12)) ||
       (dd && (dd < 1 || dd > 31))
