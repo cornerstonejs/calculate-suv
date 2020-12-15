@@ -30,7 +30,7 @@ class FullDateInterface {
     const mm = dateString.length >= 7 ? parseInt(dateString.substring(5, 7), 10) : undefined;
     const dd = dateString.length >= 10 ? parseInt(dateString.substring(8, 10), 10) : undefined;
 
-    if (isNaN(yyyy) || mm !== undefined && isNaN(mm) || dd !== undefined && isNaN(dd) || yyyy < 1970 || yyyy > 3000 || mm && (mm < 1 || mm > 12) || dd && (dd < 1 || dd > 31)) {
+    if (isNaN(yyyy) || mm !== undefined && isNaN(mm) || dd !== undefined && isNaN(dd) || yyyy > 3000 || mm && (mm < 1 || mm > 12) || dd && (dd < 1 || dd > 31)) {
       throw new Error(`invalid date '${dateString}'`);
     }
 
