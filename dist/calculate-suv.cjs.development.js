@@ -487,12 +487,12 @@ function calculateSUVScalingFactors(instances) {
     const hasValidSUVScaleFactor = instances.every(instance => {
       var _instance$PhilipsPETP, _instance$PhilipsPETP2;
 
-      return instance.PhilipsPETPrivateGroup && ((_instance$PhilipsPETP = instance.PhilipsPETPrivateGroup) == null ? void 0 : _instance$PhilipsPETP.SUVScaleFactor) !== undefined && ((_instance$PhilipsPETP2 = instance.PhilipsPETPrivateGroup) == null ? void 0 : _instance$PhilipsPETP2.SUVScaleFactor) !== 0;
+      return instance.PhilipsPETPrivateGroup && ((_instance$PhilipsPETP = instance.PhilipsPETPrivateGroup) === null || _instance$PhilipsPETP === void 0 ? void 0 : _instance$PhilipsPETP.SUVScaleFactor) !== undefined && ((_instance$PhilipsPETP2 = instance.PhilipsPETPrivateGroup) === null || _instance$PhilipsPETP2 === void 0 ? void 0 : _instance$PhilipsPETP2.SUVScaleFactor) !== 0;
     });
     const hasValidActivityConcentrationScaleFactor = instances.every(instance => {
       var _instance$PhilipsPETP3, _instance$PhilipsPETP4, _instance$PhilipsPETP5;
 
-      return instance.PhilipsPETPrivateGroup && !((_instance$PhilipsPETP3 = instance.PhilipsPETPrivateGroup) != null && _instance$PhilipsPETP3.SUVScaleFactor) && ((_instance$PhilipsPETP4 = instance.PhilipsPETPrivateGroup) == null ? void 0 : _instance$PhilipsPETP4.ActivityConcentrationScaleFactor) !== undefined && ((_instance$PhilipsPETP5 = instance.PhilipsPETPrivateGroup) == null ? void 0 : _instance$PhilipsPETP5.ActivityConcentrationScaleFactor) !== 0;
+      return instance.PhilipsPETPrivateGroup && !((_instance$PhilipsPETP3 = instance.PhilipsPETPrivateGroup) !== null && _instance$PhilipsPETP3 !== void 0 && _instance$PhilipsPETP3.SUVScaleFactor) && ((_instance$PhilipsPETP4 = instance.PhilipsPETPrivateGroup) === null || _instance$PhilipsPETP4 === void 0 ? void 0 : _instance$PhilipsPETP4.ActivityConcentrationScaleFactor) !== undefined && ((_instance$PhilipsPETP5 = instance.PhilipsPETPrivateGroup) === null || _instance$PhilipsPETP5 === void 0 ? void 0 : _instance$PhilipsPETP5.ActivityConcentrationScaleFactor) !== 0;
     }); //console.log(`hasValidSUVScaleFactor: ${hasValidSUVScaleFactor}`);
     //console.log(`hasValidActivityConcentrationScaleFactor: ${hasValidActivityConcentrationScaleFactor}`);
 
