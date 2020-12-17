@@ -1,5 +1,5 @@
-import readDICOMFolder from './readDICOMFolder';
-
+// import readDICOMFolder from './readDICOMFolder';
+import fs from 'fs';
 import { calculateSUVScalingFactors } from '../src';
 import dcmjs from 'dcmjs';
 
@@ -10,24 +10,40 @@ dcmjs.log.disable();
 // Note: Converted everything to Implicit Little Endian Transfer Syntax:
 // find . -maxdepth 1 -type f -print0 | parallel -0 dcmconv +ti {1} {1}
 const sampleDataPaths: string[] = [
-  'PHILIPS_BQML',
-  'PHILIPS_CNTS_&_BQML_SUV',
-  'PHILIPS_CNTS_AND_SUV',
+  // Standard, "Units": "BQML", contains RadiopharmaceuticalStartDateTime
   'SIEMENS',
   'GE_MEDICAL_AND_BQML',
+
+  // Units: BQML, contains Philips private tag group (which should not be used)
+  'PHILIPS_BQML',
+
+  // Units: CNTS, Philips private tag group with both SUVScaleFactor and ActivityConcentrationScaleFactor
+  'PHILIPS_CNTS_AND_BQML_SUV',
+
+  // Units: CNTS, Philips private tag group with valid SUVScaleFactor
+  'PHILIPS_CNTS_AND_SUV',
+
+  // Acqusition Date Time is earlier than Series Date Time
   'BQML_AC_DT_<_S_DT + SIEMENS',
+
+  // Missing RadiopharmaceuticalStartDateTime, only uses RadiopharmaceuticalStartTime
   'CPS_AND_BQML_AC_DT_-_S_DT',
+
+  // Missing RadiopharmaceuticalStartDateTime, only uses RadiopharmaceuticalStartTime
   'RADIOPHARM_DATETIME_UNDEFINED',
+
+  // Need to find: Real-world dataset that requires Syngo3.x multi-inject pathway
+  //               Real-world dataset with GEPrivatePostInjectionDateTime
 ];
 
 // Note: sample data must be organized as
 // folderName / dicom / all dicom files
 
 sampleDataPaths.forEach(folder => {
-  const dicomFolder = `./test/data/${folder}/dicom`;
+  //const dicomFolder = `./test/data/${folder}/dicom`;
   const precomputedSUVFactors = new Map();
   precomputedSUVFactors.set('PHILIPS_BQML', 0.0007463747013889488);
-  precomputedSUVFactors.set('PHILIPS_CNTS_&_BQML_SUV', 0.000551);
+  precomputedSUVFactors.set('PHILIPS_CNTS_AND_BQML_SUV', 0.000551);
   precomputedSUVFactors.set('PHILIPS_CNTS_AND_SUV', 0.000728);
   precomputedSUVFactors.set('SIEMENS', 0.00042748316187197236);
   precomputedSUVFactors.set('GE_MEDICAL_AND_BQML', 0.0005367387681819742);
@@ -51,7 +67,17 @@ sampleDataPaths.forEach(folder => {
     it('matches the known, precomputed, SUV values', () => {
       // Arrange
       // 1. Read underlying input dicom data
-      const { instanceMetadata } = readDICOMFolder(dicomFolder);
+      //let { instanceMetadata } = readDICOMFolder(dicomFolder);
+      /*instanceMetadata = instanceMetadata.slice(0,3);
+
+      console.log(`./metadata/${folder}.json`)
+      fs.writeFileSync(`./metadata/${folder}-instances.json`, JSON.stringify(instanceMetadata, null, 2));*/
+
+      // TODO: Make this async?
+      const filename = `${folder}-instances`;
+      const instanceMetadata = JSON.parse(
+        fs.readFileSync(`./test/metadata/${filename}.json`, 'utf8')
+      );
 
       // Act
       // 2. Calculate scaleFactor from the metadata

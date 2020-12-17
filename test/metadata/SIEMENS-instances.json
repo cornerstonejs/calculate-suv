@@ -1,0 +1,80 @@
+[
+  {
+    "SeriesDate": "20201217",
+    "SeriesTime": "104829.000000",
+    "PatientSex": "M",
+    "PatientWeight": 67,
+    "AcquisitionDate": "20201217",
+    "AcquisitionTime": "104830.351370",
+    "FrameReferenceTime": 38513.36,
+    "DecayCorrection": "START",
+    "Units": "BQML",
+    "RadionuclideTotalDose": 374000000,
+    "RadionuclideHalfLife": 6586.2,
+    "RadiopharmaceuticalStartTime": "083045.000000",
+    "RadiopharmaceuticalStartDateTime": "20201217083045.000000 ",
+    "CorrectedImage": [
+      "NORM",
+      "DTIM",
+      "ATTN",
+      "SCAT",
+      "SCAT",
+      "DECY",
+      "RAN"
+    ],
+    "ActualFrameDuration": 74324,
+    "PhilipsPETPrivateGroup": {}
+  },
+  {
+    "SeriesDate": "20201217",
+    "SeriesTime": "104829.000000",
+    "PatientSex": "M",
+    "PatientWeight": 67,
+    "AcquisitionDate": "20201217",
+    "AcquisitionTime": "104830.351370",
+    "FrameReferenceTime": 39189.36,
+    "DecayCorrection": "START",
+    "Units": "BQML",
+    "RadionuclideTotalDose": 374000000,
+    "RadionuclideHalfLife": 6586.2,
+    "RadiopharmaceuticalStartTime": "083045.000000",
+    "RadiopharmaceuticalStartDateTime": "20201217083045.000000 ",
+    "CorrectedImage": [
+      "NORM",
+      "DTIM",
+      "ATTN",
+      "SCAT",
+      "SCAT",
+      "DECY",
+      "RAN"
+    ],
+    "ActualFrameDuration": 75676,
+    "PhilipsPETPrivateGroup": {}
+  },
+  {
+    "SeriesDate": "20201217",
+    "SeriesTime": "104829.000000",
+    "PatientSex": "M",
+    "PatientWeight": 67,
+    "AcquisitionDate": "20201217",
+    "AcquisitionTime": "104830.351370",
+    "FrameReferenceTime": 39864.86,
+    "DecayCorrection": "START",
+    "Units": "BQML",
+    "RadionuclideTotalDose": 374000000,
+    "RadionuclideHalfLife": 6586.2,
+    "RadiopharmaceuticalStartTime": "083045.000000",
+    "RadiopharmaceuticalStartDateTime": "20201217083045.000000 ",
+    "CorrectedImage": [
+      "NORM",
+      "DTIM",
+      "ATTN",
+      "SCAT",
+      "SCAT",
+      "DECY",
+      "RAN"
+    ],
+    "ActualFrameDuration": 77027,
+    "PhilipsPETPrivateGroup": {}
+  }
+]

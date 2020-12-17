@@ -16,7 +16,7 @@ interface InstanceMetadataForScanTimes {
     ActualFrameDuration?: number;
 }
 /**
- * Calcualte the scan times
+ * Calculate the scan times
  *
  * @export
  * @param {InstanceMetadataForScanTimes[]} instances

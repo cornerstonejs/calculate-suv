@@ -180,7 +180,7 @@ describe('combineDateTime', () => {
     // Assert
     expect(() => {
       date.getTimeInSec();
-    }).toThrowError(`invalid date`);
+    }).toThrowError(`invalid time`);
   });
 
   it('FullDateInterface should return error for bad time formatting', () => {

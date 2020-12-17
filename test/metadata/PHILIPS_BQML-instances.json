@@ -1,0 +1,95 @@
+[
+  {
+    "SeriesDate": "20201217",
+    "SeriesTime": "110155",
+    "PatientSex": "F",
+    "PatientSize": 1.75,
+    "PatientWeight": 64,
+    "AcquisitionDate": "20201217",
+    "AcquisitionTime": "110156",
+    "FrameReferenceTime": 1328700,
+    "DecayCorrection": "START",
+    "Units": "BQML",
+    "RadionuclideTotalDose": 126000000,
+    "RadionuclideHalfLife": 6586.199707,
+    "RadiopharmaceuticalStartTime": "100058",
+    "RadiopharmaceuticalStartDateTime": "20201217100058",
+    "CorrectedImage": [
+      "DECY",
+      "RADL",
+      "ATTN",
+      "SCAT",
+      "DTIM",
+      "RAN",
+      "NORM",
+      "CLN"
+    ],
+    "ActualFrameDuration": 120700,
+    "PhilipsPETPrivateGroup": {
+      "SUVScaleFactor": "0.003515736 ",
+      "ActivityConcentrationScaleFactor": "4.709921"
+    }
+  },
+  {
+    "SeriesDate": "20201217",
+    "SeriesTime": "110155",
+    "PatientSex": "F",
+    "PatientSize": 1.75,
+    "PatientWeight": 64,
+    "AcquisitionDate": "20201217",
+    "AcquisitionTime": "110156",
+    "FrameReferenceTime": 1328700,
+    "DecayCorrection": "START",
+    "Units": "BQML",
+    "RadionuclideTotalDose": 126000000,
+    "RadionuclideHalfLife": 6586.199707,
+    "RadiopharmaceuticalStartTime": "100058",
+    "RadiopharmaceuticalStartDateTime": "20201217100058",
+    "CorrectedImage": [
+      "DECY",
+      "RADL",
+      "ATTN",
+      "SCAT",
+      "DTIM",
+      "RAN",
+      "NORM",
+      "CLN"
+    ],
+    "ActualFrameDuration": 120700,
+    "PhilipsPETPrivateGroup": {
+      "SUVScaleFactor": "0.003515736 ",
+      "ActivityConcentrationScaleFactor": "4.709921"
+    }
+  },
+  {
+    "SeriesDate": "20201217",
+    "SeriesTime": "110155",
+    "PatientSex": "F",
+    "PatientSize": 1.75,
+    "PatientWeight": 64,
+    "AcquisitionDate": "20201217",
+    "AcquisitionTime": "110156",
+    "FrameReferenceTime": 1328700,
+    "DecayCorrection": "START",
+    "Units": "BQML",
+    "RadionuclideTotalDose": 126000000,
+    "RadionuclideHalfLife": 6586.199707,
+    "RadiopharmaceuticalStartTime": "100058",
+    "RadiopharmaceuticalStartDateTime": "20201217100058",
+    "CorrectedImage": [
+      "DECY",
+      "RADL",
+      "ATTN",
+      "SCAT",
+      "DTIM",
+      "RAN",
+      "NORM",
+      "CLN"
+    ],
+    "ActualFrameDuration": 120700,
+    "PhilipsPETPrivateGroup": {
+      "SUVScaleFactor": "0.003515736 ",
+      "ActivityConcentrationScaleFactor": "4.709921"
+    }
+  }
+]

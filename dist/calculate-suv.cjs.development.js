@@ -219,7 +219,7 @@ function dateTimeToFullDateInterface(dateTime) {
 }
 
 /**
- * Calcualte the scan times
+ * Calculate the scan times
  *
  * @export
  * @param {InstanceMetadataForScanTimes[]} instances
@@ -265,13 +265,17 @@ function calculateScanTimes(instances) {
       // GE Private scan
       return results.fill(dateTimeToFullDateInterface(GEPrivatePostInjectionDateTime));
     } else {
-      const hasValidFrameTimes = instances.every(instance => {
-        return instance.FrameReferenceTime && instance.FrameReferenceTime > 0 && instance.ActualFrameDuration && instance.ActualFrameDuration > 0;
-      });
-      console.log(hasValidFrameTimes); // TODO: Temporarily commented out the checks and logic below to
+      /*const hasValidFrameTimes = instances.every(instance => {
+        return (
+          instance.FrameReferenceTime &&
+          instance.FrameReferenceTime > 0 &&
+          instance.ActualFrameDuration &&
+          instance.ActualFrameDuration > 0
+        );
+      });*/
+      // TODO: Temporarily commented out the checks and logic below to
       // investigate the BQML_AC_DT_<_S_DT + SIEMENS case
       //if (!hasValidFrameTimes) {
-
       return results.fill(earliestAcquisitionDateTime); //}
 
       /* Siemens PETsyngo	3.x	multi-injection logic

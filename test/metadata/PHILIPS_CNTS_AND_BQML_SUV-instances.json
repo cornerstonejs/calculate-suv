@@ -1,0 +1,86 @@
+[
+  {
+    "SeriesDate": "20201217",
+    "SeriesTime": "093556",
+    "PatientSex": "F",
+    "PatientWeight": 54,
+    "AcquisitionDate": "20201217",
+    "AcquisitionTime": "095439",
+    "FrameReferenceTime": 1183000,
+    "DecayCorrection": "START",
+    "Units": "CNTS",
+    "RadionuclideTotalDose": 238000000,
+    "RadionuclideHalfLife": 6588,
+    "RadiopharmaceuticalStartTime": "083000",
+    "CorrectedImage": [
+      "DECY",
+      "RADL",
+      "ATTN",
+      "SCAT",
+      "DTIM",
+      "RAN",
+      "NORM"
+    ],
+    "ActualFrameDuration": 120000,
+    "PhilipsPETPrivateGroup": {
+      "SUVScaleFactor": "0.000551",
+      "ActivityConcentrationScaleFactor": "1.602563"
+    }
+  },
+  {
+    "SeriesDate": "20201217",
+    "SeriesTime": "093556",
+    "PatientSex": "F",
+    "PatientWeight": 54,
+    "AcquisitionDate": "20201217",
+    "AcquisitionTime": "095439",
+    "FrameReferenceTime": 1183000,
+    "DecayCorrection": "START",
+    "Units": "CNTS",
+    "RadionuclideTotalDose": 238000000,
+    "RadionuclideHalfLife": 6588,
+    "RadiopharmaceuticalStartTime": "083000",
+    "CorrectedImage": [
+      "DECY",
+      "RADL",
+      "ATTN",
+      "SCAT",
+      "DTIM",
+      "RAN",
+      "NORM"
+    ],
+    "ActualFrameDuration": 120000,
+    "PhilipsPETPrivateGroup": {
+      "SUVScaleFactor": "0.000551",
+      "ActivityConcentrationScaleFactor": "1.602563"
+    }
+  },
+  {
+    "SeriesDate": "20201217",
+    "SeriesTime": "093556",
+    "PatientSex": "F",
+    "PatientWeight": 54,
+    "AcquisitionDate": "20201217",
+    "AcquisitionTime": "095439",
+    "FrameReferenceTime": 1183000,
+    "DecayCorrection": "START",
+    "Units": "CNTS",
+    "RadionuclideTotalDose": 238000000,
+    "RadionuclideHalfLife": 6588,
+    "RadiopharmaceuticalStartTime": "083000",
+    "CorrectedImage": [
+      "DECY",
+      "RADL",
+      "ATTN",
+      "SCAT",
+      "DTIM",
+      "RAN",
+      "NORM"
+    ],
+    "ActualFrameDuration": 120000,
+    "PhilipsPETPrivateGroup": {
+      "SUVScaleFactor": "0.000551",
+      "ActivityConcentrationScaleFactor": "1.602563"
+    }
+  }
+]
