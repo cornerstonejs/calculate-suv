@@ -13,9 +13,7 @@ export default function dateTimeToFullDateInterface(
   dateTime: string
 ): FullDateInterface {
   if (dateTime === undefined || dateTime === null) {
-    throw new Error(
-      'dateTimeToFullDateInterface : dateTime not defined.'
-    );
+    throw new Error('dateTimeToFullDateInterface : dateTime not defined.');
   }
 
   const date = parseDA(dateTime.substring(0, 8));

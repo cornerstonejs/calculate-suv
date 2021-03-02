@@ -208,7 +208,9 @@ export default function calculateSUVScalingFactors(
   // get BSA
   let suvbsaFactor: number | undefined;
   if (PatientSize === null || PatientSize === undefined) {
-    console.warn('PatientSize value is missing. It is not possible to calculate the SUV bsa factors');
+    console.warn(
+      'PatientSize value is missing. It is not possible to calculate the SUV bsa factors'
+    );
   } else {
     const sulInputs: SUVbsaScalingFactorInput = {
       PatientWeight,
@@ -221,9 +223,13 @@ export default function calculateSUVScalingFactors(
   // get LBM
   let suvlbmFactor: number | undefined;
   if (PatientSize === null || PatientSize === undefined) {
-    console.warn('PatientSize value is missing. It is not possible to calculate the SUV lbm factors');
+    console.warn(
+      'PatientSize value is missing. It is not possible to calculate the SUV lbm factors'
+    );
   } else if (PatientSex === null || PatientSex === undefined) {
-    console.warn('PatientSex value is missing. It is not possible to calculate the SUV lbm factors');
+    console.warn(
+      'PatientSex value is missing. It is not possible to calculate the SUV lbm factors'
+    );
   } else {
     const suvlbmInputs: SUVlbmScalingFactorInput = {
       PatientWeight,
