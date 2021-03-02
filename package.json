@@ -47,6 +47,7 @@
   ],
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@babel/plugin-proposal-optional-chaining": "^7.12.7",
     "@babel/preset-env": "^7.12.7",
     "@babel/preset-typescript": "^7.12.7",
     "@size-limit/preset-small-lib": "^4.9.0",

@@ -24,7 +24,7 @@ interface InstanceMetadataForScanTimes {
 }
 
 /**
- * Calcualte the scan times
+ * Calculate the scan times
  *
  * @export
  * @param {InstanceMetadataForScanTimes[]} instances
@@ -86,16 +86,14 @@ export default function calculateScanTimes(
         dateTimeToFullDateInterface(GEPrivatePostInjectionDateTime)
       );
     } else {
-      const hasValidFrameTimes = instances.every(instance => {
+      /*const hasValidFrameTimes = instances.every(instance => {
         return (
           instance.FrameReferenceTime &&
           instance.FrameReferenceTime > 0 &&
           instance.ActualFrameDuration &&
           instance.ActualFrameDuration > 0
         );
-      });
-
-      console.log(hasValidFrameTimes);
+      });*/
 
       // TODO: Temporarily commented out the checks and logic below to
       // investigate the BQML_AC_DT_<_S_DT + SIEMENS case

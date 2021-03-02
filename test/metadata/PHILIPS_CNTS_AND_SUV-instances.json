@@ -1,0 +1,83 @@
+[
+  {
+    "SeriesDate": "20201217",
+    "SeriesTime": "134551",
+    "PatientSex": "F",
+    "PatientWeight": 47,
+    "AcquisitionDate": "20201217",
+    "AcquisitionTime": "141336",
+    "FrameReferenceTime": 1755000,
+    "DecayCorrection": "START",
+    "Units": "CNTS",
+    "RadionuclideTotalDose": 208230000,
+    "RadionuclideHalfLife": 6588,
+    "RadiopharmaceuticalStartTime": "123000",
+    "CorrectedImage": [
+      "DECY",
+      "RADL",
+      "ATTN",
+      "SCAT",
+      "DTIM",
+      "RAN",
+      "NORM"
+    ],
+    "ActualFrameDuration": 180000,
+    "PhilipsPETPrivateGroup": {
+      "SUVScaleFactor": "0.000728"
+    }
+  },
+  {
+    "SeriesDate": "20201217",
+    "SeriesTime": "134551",
+    "PatientSex": "F",
+    "PatientWeight": 47,
+    "AcquisitionDate": "20201217",
+    "AcquisitionTime": "141336",
+    "FrameReferenceTime": 1755000,
+    "DecayCorrection": "START",
+    "Units": "CNTS",
+    "RadionuclideTotalDose": 208230000,
+    "RadionuclideHalfLife": 6588,
+    "RadiopharmaceuticalStartTime": "123000",
+    "CorrectedImage": [
+      "DECY",
+      "RADL",
+      "ATTN",
+      "SCAT",
+      "DTIM",
+      "RAN",
+      "NORM"
+    ],
+    "ActualFrameDuration": 180000,
+    "PhilipsPETPrivateGroup": {
+      "SUVScaleFactor": "0.000728"
+    }
+  },
+  {
+    "SeriesDate": "20201217",
+    "SeriesTime": "134551",
+    "PatientSex": "F",
+    "PatientWeight": 47,
+    "AcquisitionDate": "20201217",
+    "AcquisitionTime": "141336",
+    "FrameReferenceTime": 1755000,
+    "DecayCorrection": "START",
+    "Units": "CNTS",
+    "RadionuclideTotalDose": 208230000,
+    "RadionuclideHalfLife": 6588,
+    "RadiopharmaceuticalStartTime": "123000",
+    "CorrectedImage": [
+      "DECY",
+      "RADL",
+      "ATTN",
+      "SCAT",
+      "DTIM",
+      "RAN",
+      "NORM"
+    ],
+    "ActualFrameDuration": 180000,
+    "PhilipsPETPrivateGroup": {
+      "SUVScaleFactor": "0.000728"
+    }
+  }
+]
