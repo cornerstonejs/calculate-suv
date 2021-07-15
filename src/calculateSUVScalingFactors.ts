@@ -35,6 +35,18 @@ function calculateDecayCorrection(instances: InstanceMetadata[]): number[] {
     SeriesDate,
   } = instances[0];
 
+  if (RadionuclideTotalDose === undefined || RadionuclideTotalDose === null) {
+    throw new Error(
+      'calculateDecayCorrection : RadionuclideTotalDose value not found.'
+    );
+  }
+
+  if (RadionuclideHalfLife === undefined || RadionuclideHalfLife === null) {
+    throw new Error(
+      'calculateDecayCorrection : RadionuclideHalfLife value not found.'
+    );
+  }
+
   const scanTimes: FullDateInterface[] = calculateScanTimes(instances);
   const startTime: FullDateInterface = calculateStartTime({
     RadiopharmaceuticalStartDateTime,
@@ -119,6 +131,12 @@ export default function calculateSUVScalingFactors(
     );
   }
 
+  if (PatientWeight === null || PatientWeight === undefined) {
+    throw new Error(
+      'PatientWeight value is missing. It is not possible to calculate the SUV factors'
+    );
+  }
+
   let decayCorrectionArray: number[] = new Array(instances.length);
   decayCorrectionArray = calculateDecayCorrection(instances);
 
@@ -133,6 +151,7 @@ export default function calculateSUVScalingFactors(
     const hasValidSUVScaleFactor: boolean = instances.every(instance => {
       return (
         instance.PhilipsPETPrivateGroup &&
+        instance.PhilipsPETPrivateGroup?.SUVScaleFactor !== null &&
         instance.PhilipsPETPrivateGroup?.SUVScaleFactor !== undefined &&
         instance.PhilipsPETPrivateGroup?.SUVScaleFactor !== 0
       );
@@ -188,7 +207,11 @@ export default function calculateSUVScalingFactors(
 
   // get BSA
   let suvbsaFactor: number | undefined;
-  if (PatientWeight && PatientSize) {
+  if (PatientSize === null || PatientSize === undefined) {
+    console.warn(
+      'PatientSize value is missing. It is not possible to calculate the SUV bsa factors'
+    );
+  } else {
     const sulInputs: SUVbsaScalingFactorInput = {
       PatientWeight,
       PatientSize,
@@ -199,7 +222,15 @@ export default function calculateSUVScalingFactors(
 
   // get LBM
   let suvlbmFactor: number | undefined;
-  if (PatientWeight && PatientSex && PatientSize) {
+  if (PatientSize === null || PatientSize === undefined) {
+    console.warn(
+      'PatientSize value is missing. It is not possible to calculate the SUV lbm factors'
+    );
+  } else if (PatientSex === null || PatientSex === undefined) {
+    console.warn(
+      'PatientSex value is missing. It is not possible to calculate the SUV lbm factors'
+    );
+  } else {
     const suvlbmInputs: SUVlbmScalingFactorInput = {
       PatientWeight,
       PatientSex,
