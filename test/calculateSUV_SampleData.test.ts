@@ -60,7 +60,7 @@ sampleDataPaths.forEach(folder => {
     0.0003721089202818729
   );
   /// at the moment for a dataset, each frame has always the same SUV factor.
-  /// 'BQML_AC_DT_BEFORE_S_DT_SIEMENS' will have eventually a SUV factor value for each frame,
+  /// 'BQML_AC_DT_lessThan_S_DT_SIEMENS' will have eventually a SUV factor value for each frame,
   /// in that case this test will need to be update by comparing the SUV factors of the frames with precomputed ones.
 
   describe(`calculateSUVScalingFactors from dicom: ${folder}`, () => {
