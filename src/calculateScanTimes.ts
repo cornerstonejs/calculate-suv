@@ -96,7 +96,7 @@ export default function calculateScanTimes(
       });*/
 
       // TODO: Temporarily commented out the checks and logic below to
-      // investigate the BQML_AC_DT_<_S_DT + SIEMENS case
+      // investigate the BQML_AC_DT_lessThan_S_DT_SIEMENS-instances case
       //if (!hasValidFrameTimes) {
       return results.fill(earliestAcquisitionDateTime);
       //}
