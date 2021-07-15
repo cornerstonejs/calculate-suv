@@ -24,11 +24,7 @@ const sampleDataPaths: string[] = [
   'PHILIPS_CNTS_AND_SUV',
 
   // Acqusition Date Time is earlier than Series Date Time
-<<<<<<< HEAD
   'BQML_AC_DT_lessThan_S_DT_SIEMENS',
-=======
-  'BQML_AC_DT_BEFORE_S_DT_SIEMENS',
->>>>>>> rename bad file to something more clear
 
   // Missing RadiopharmaceuticalStartDateTime, only uses RadiopharmaceuticalStartTime
   'CPS_AND_BQML_AC_DT_-_S_DT',
@@ -52,11 +48,7 @@ sampleDataPaths.forEach(folder => {
   precomputedSUVFactors.set('SIEMENS', 0.00042748316187197236);
   precomputedSUVFactors.set('GE_MEDICAL_AND_BQML', 0.0005367387681819742);
   precomputedSUVFactors.set(
-<<<<<<< HEAD
     'BQML_AC_DT_lessThan_S_DT_SIEMENS',
-=======
-    'BQML_AC_DT_BEFORE_S_DT_SIEMENS',
->>>>>>> rename bad file to something more clear
     0.0004069156854009332
   );
   precomputedSUVFactors.set(
