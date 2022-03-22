@@ -1,8 +1,10 @@
 {
+  "name": "@cornerstonejs/calculate-suv",
   "version": "0.1.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "module": "dist/calculate-suv.esm.js",
   "files": [
     "dist",
     "src"
@@ -32,9 +34,6 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "calculate-suv",
-  "author": "Erik Ziegler",
-  "module": "dist/calculate-suv.esm.js",
   "size-limit": [
     {
       "path": "dist/calculate-suv.cjs.production.min.js",
@@ -53,14 +52,13 @@
     "@size-limit/preset-small-lib": "^4.9.0",
     "@types/jest": "^26.0.15",
     "babel-jest": "^26.6.3",
-    "dcmjs": "^0.16.7",
+    "dcmjs": "^0.19.7",
     "husky": "^4.3.0",
     "loglevelnext": "^4.0.1",
     "nifti-js": "^1.0.1",
-    "nifti-reader-js": "^0.5.4",
     "size-limit": "^4.9.0",
     "tsdx": "^0.14.1",
-    "tslib": "^2.0.3",
-    "typescript": "^4.1.2"
+    "tslib": "^2.3.1",
+    "typescript": "^4.6.2"
   }
 }
