@@ -44,6 +44,9 @@
       "limit": "10 KB"
     }
   ],
+  "release": {
+    "branches": ["main"]
+  },
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/plugin-proposal-optional-chaining": "^7.12.7",
