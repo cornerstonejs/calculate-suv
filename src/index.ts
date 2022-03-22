@@ -1,6 +1,11 @@
 import calculateSUVScalingFactors from './calculateSUVScalingFactors';
+import { InstanceMetadata, PhilipsPETPrivateGroup } from './types';
 
 export { calculateSUVScalingFactors };
+
+// TODO: import type and export type are not working right with tsdx
+// we should stop using it.
+export { InstanceMetadata, PhilipsPETPrivateGroup };
 
 /*
 
