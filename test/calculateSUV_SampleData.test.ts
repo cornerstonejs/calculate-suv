@@ -1,11 +1,11 @@
 // import readDICOMFolder from './readDICOMFolder';
 import fs from 'fs';
 import { calculateSUVScalingFactors } from '../src';
-import dcmjs from 'dcmjs';
+// import dcmjs from 'dcmjs';
 
 // Temporarily diable dcmjs logging because it logs a lot of
 // VR errors
-dcmjs.log.disable();
+// dcmjs.log.disable();
 
 // Note: Converted everything to Implicit Little Endian Transfer Syntax:
 // find . -maxdepth 1 -type f -print0 | parallel -0 dcmconv +ti {1} {1}

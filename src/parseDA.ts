@@ -6,7 +6,7 @@
  * @param {number} y
  * @returns {number} number of days
  */
-function daysInMonth(m: number, y: number) {
+function daysInMonth(m: number, y: number): number {
   // m is 0 indexed: 0-11
   switch (m) {
     case 2:
@@ -29,7 +29,7 @@ function daysInMonth(m: number, y: number) {
  * @param {number} y
  * @returns {boolean} boolean result
  */
-function isValidDate(d: number, m: number, y: number) {
+function isValidDate(d: number, m: number, y: number): boolean {
   // make year is a number
   if (isNaN(y)) {
     return false;
