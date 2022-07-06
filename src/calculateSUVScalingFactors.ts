@@ -113,7 +113,8 @@ export default function calculateSUVScalingFactors(
   const isSingleSeries = instances.every(instance => {
     return (
       instance.Units === Units &&
-      arrayEquals(instance.CorrectedImage, CorrectedImage) &&
+      (instance.CorrectedImage === CorrectedImage ||
+        arrayEquals(instance.CorrectedImage, CorrectedImage)) &&
       instance.PatientWeight === PatientWeight &&
       instance.PatientSex === PatientSex &&
       instance.PatientSize === PatientSize &&
