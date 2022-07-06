@@ -70,14 +70,24 @@ function calculateDecayCorrection(instances: InstanceMetadata[]): number[] {
   });
 }
 
-function arrayEquals(a: any[], b: any[]): boolean {
+/**
+ *
+ * @param a Simple value or array of simple values
+ * @param b Simple value or array of simple values
+ * @returns boolean true if the values are equal.
+ */
+const deepEquals = (
+  a: string | number | any[],
+  b: string | number | any[]
+): boolean => {
   return (
-    Array.isArray(a) &&
-    Array.isArray(b) &&
-    a.length === b.length &&
-    a.every((val, index) => val === b[index])
+    a === b ||
+    (Array.isArray(a) &&
+      Array.isArray(b) &&
+      a.length === b.length &&
+      a.every((val, index) => val === b[index]))
   );
-}
+};
 
 /**
  * Calculate the SUV factor
@@ -113,7 +123,7 @@ export default function calculateSUVScalingFactors(
   const isSingleSeries = instances.every(instance => {
     return (
       instance.Units === Units &&
-      arrayEquals(instance.CorrectedImage, CorrectedImage) &&
+      deepEquals(instance.CorrectedImage, CorrectedImage) &&
       instance.PatientWeight === PatientWeight &&
       instance.PatientSex === PatientSex &&
       instance.PatientSize === PatientSize &&

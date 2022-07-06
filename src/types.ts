@@ -16,7 +16,7 @@ export interface PhilipsPETPrivateGroup {
  * @interface InstanceMetadata
  */
 export interface InstanceMetadata {
-  CorrectedImage: string[];
+  CorrectedImage: string[] | string; // The dcmjs naturalize produces a string value for single item arrays :-(
   Units: string; // 'BQML' | 'CNTS' | 'GML'; // Units (0x0054,0x1001)
   RadionuclideHalfLife: number; // 	RadionuclideHalfLife(0x0018,0x1075)	in	Radiopharmaceutical	Information	Sequence(0x0054,0x0016)
   RadionuclideTotalDose: number;
