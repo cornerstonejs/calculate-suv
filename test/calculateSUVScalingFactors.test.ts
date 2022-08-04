@@ -83,9 +83,9 @@ describe('calculateSUVScalingFactors', () => {
     ]);
   });
 
-  it('calculates suvbsa, suvlbm and suvFactor if wieight, size and sex known', () => {
+  it('calculates suvbsa, suvlbm and suvFactor if weight, size and sex known', () => {
     expect(calculateSUVScalingFactors(inputlbmbsaFactor)).toEqual([
-      { suvbw: 750, suvbsa: 198.13758427117767, suvlbm: 581.7567567567568 },
+      { suvbw: 750, suvbsa: 198.13758427117767, suvlbm: 627.7757487216948 },
     ]);
   });
 });
