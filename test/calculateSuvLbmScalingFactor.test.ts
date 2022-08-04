@@ -11,12 +11,12 @@ let input: SUVlbmScalingFactorInput = {
 
 describe('calculateSUVlbmScalingFactor', () => {
   it('calculates SUVlbm for M', () => {
-    expect(calculateSUVlbmScalingFactor(input)).toEqual(58175.67567567568);
+    expect(calculateSUVlbmScalingFactor(input)).toEqual(62777.57487216947);
   });
 
   it('calculates SUVlbm for F', () => {
     input.PatientSex = 'F';
-    expect(calculateSUVlbmScalingFactor(input)).toEqual(60527.57487216947);
+    expect(calculateSUVlbmScalingFactor(input)).toEqual(55925.67567567568);
   });
 
   it('ThrowError if gender is missing', () => {
