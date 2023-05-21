@@ -1,9 +1,7 @@
 import { FullDateInterface } from './combineDateTime';
 import { calculateScanTimes } from './calculateScanTimes';
-import calculateSUVlbmScalingFactor from './calculateSUVlbmScalingFactor';
-import { SUVlbmScalingFactorInput } from './calculateSUVlbmScalingFactor';
-import calculateSUVbsaScalingFactor from './calculateSUVbsaScalingFactor';
-import { SUVbsaScalingFactorInput } from './calculateSUVbsaScalingFactor';
+import { calculateSUVlbmScalingFactor, SUVlbmScalingFactorInput } from './calculateSUVlbmScalingFactor';
+import { calculateSUVbsaScalingFactor, SUVbsaScalingFactorInput } from './calculateSUVbsaScalingFactor';
 import { calculateStartTime } from './calculateStartTime';
 import { InstanceMetadata } from './types';
 
@@ -154,7 +152,7 @@ export default function calculateSUVScalingFactors(
   const weightInGrams: number = PatientWeight * 1000;
 
   if (Units === 'BQML') {
-    results = decayCorrectionArray.map(function(value) {
+    results = decayCorrectionArray.map(function (value) {
       return value * weightInGrams;
     });
   } else if (Units === 'CNTS') {
@@ -173,9 +171,9 @@ export default function calculateSUVScalingFactors(
           instance.PhilipsPETPrivateGroup &&
           !instance.PhilipsPETPrivateGroup?.SUVScaleFactor &&
           instance.PhilipsPETPrivateGroup?.ActivityConcentrationScaleFactor !==
-            undefined &&
+          undefined &&
           instance.PhilipsPETPrivateGroup?.ActivityConcentrationScaleFactor !==
-            0
+          0
         );
       }
     );
@@ -250,7 +248,7 @@ export default function calculateSUVScalingFactors(
     suvlbmFactor = calculateSUVlbmScalingFactor(suvlbmInputs);
   }
 
-  return results.map(function(result, index) {
+  return results.map(function (result, index) {
     const factors: ScalingFactorResult = {
       suvbw: result,
     };

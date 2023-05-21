@@ -1,4 +1,5 @@
 import {
+  calculateSUVlbmJanmahasatianScalingFactor,
   calculateSUVlbmScalingFactor,
   SUVlbmScalingFactorInput,
 } from '../src/calculateSUVlbmScalingFactor';
@@ -15,15 +16,45 @@ describe('calculateSUVlbmScalingFactor', () => {
   });
 
   it('calculates SUVlbm for F', () => {
-    input.PatientSex = 'F';
-    expect(calculateSUVlbmScalingFactor(input)).toEqual(55925.67567567568);
+    const inputData = {
+      ...input,
+      PatientSex : 'F'
+    }
+    expect(calculateSUVlbmScalingFactor(inputData)).toEqual(55925.67567567568);
   });
 
   it('ThrowError if gender is missing', () => {
-    input.PatientSex = 'T';
-
+    const inputData = {
+      ...input,
+      PatientSex : 'T'
+    }
     expect(() => {
-      calculateSUVlbmScalingFactor(input);
+      calculateSUVlbmScalingFactor(inputData);
+    }).toThrowError(`PatientSex is an invalid value: T`);
+  });
+});
+
+
+describe('calculateSUVlbmScalingFactorJanmahasatian', () => {
+  it('calculates SUVlbmJanmahasatian for M', () => {
+    expect(calculateSUVlbmJanmahasatianScalingFactor(input)).toEqual(60.91533588651974);
+  });
+
+  it('calculates SUVlbmJanmahasatian for F', () => {
+    const inputData = {
+      ...input,
+      PatientSex : 'F'
+    }
+    expect(calculateSUVlbmJanmahasatianScalingFactor(inputData)).toEqual(49.21437996837613);
+  });
+
+  it('ThrowError if gender is missing', () => {
+    const inputData = {
+      ...input,
+      PatientSex : 'T'
+    }
+    expect(() => {
+      calculateSUVlbmJanmahasatianScalingFactor(inputData);
     }).toThrowError(`PatientSex is an invalid value: T`);
   });
 });
