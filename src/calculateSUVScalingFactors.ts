@@ -1,7 +1,14 @@
 import { FullDateInterface } from './combineDateTime';
 import { calculateScanTimes } from './calculateScanTimes';
-import { calculateSUVlbmScalingFactor, SUVlbmScalingFactorInput } from './calculateSUVlbmScalingFactor';
-import { calculateSUVbsaScalingFactor, SUVbsaScalingFactorInput } from './calculateSUVbsaScalingFactor';
+import {
+  calculateSUVlbmJanmahasatianScalingFactor,
+  calculateSUVlbmScalingFactor,
+  SUVlbmScalingFactorInput,
+} from './calculateSUVlbmScalingFactor';
+import {
+  calculateSUVbsaScalingFactor,
+  SUVbsaScalingFactorInput,
+} from './calculateSUVbsaScalingFactor';
 import { calculateStartTime } from './calculateStartTime';
 import { InstanceMetadata } from './types';
 
@@ -14,6 +21,7 @@ import { InstanceMetadata } from './types';
 interface ScalingFactorResult {
   suvbw: number;
   suvlbm?: number;
+  suvlbmJanma?: number;
   suvbsa?: number;
 }
 
@@ -152,7 +160,7 @@ export default function calculateSUVScalingFactors(
   const weightInGrams: number = PatientWeight * 1000;
 
   if (Units === 'BQML') {
-    results = decayCorrectionArray.map(function (value) {
+    results = decayCorrectionArray.map(function(value) {
       return value * weightInGrams;
     });
   } else if (Units === 'CNTS') {
@@ -171,9 +179,9 @@ export default function calculateSUVScalingFactors(
           instance.PhilipsPETPrivateGroup &&
           !instance.PhilipsPETPrivateGroup?.SUVScaleFactor &&
           instance.PhilipsPETPrivateGroup?.ActivityConcentrationScaleFactor !==
-          undefined &&
+            undefined &&
           instance.PhilipsPETPrivateGroup?.ActivityConcentrationScaleFactor !==
-          0
+            0
         );
       }
     );
@@ -230,6 +238,7 @@ export default function calculateSUVScalingFactors(
 
   // get LBM
   let suvlbmFactor: number | undefined;
+  let suvlbmJenmaFactor: number | undefined;
   if (PatientSize === null || PatientSize === undefined) {
     console.warn(
       'PatientSize value is missing. It is not possible to calculate the SUV lbm factors'
@@ -246,9 +255,10 @@ export default function calculateSUVScalingFactors(
     };
 
     suvlbmFactor = calculateSUVlbmScalingFactor(suvlbmInputs);
+    suvlbmJenmaFactor = calculateSUVlbmJanmahasatianScalingFactor(suvlbmInputs);
   }
 
-  return results.map(function (result, index) {
+  return results.map(function(result, index) {
     const factors: ScalingFactorResult = {
       suvbw: result,
     };
@@ -261,6 +271,10 @@ export default function calculateSUVScalingFactors(
     if (suvlbmFactor) {
       // multiply for LBM
       factors.suvlbm = decayCorrectionArray[index] * suvlbmFactor;
+    }
+
+    if (suvlbmJenmaFactor) {
+      factors.suvlbmJanma = decayCorrectionArray[index] * suvlbmJenmaFactor;
     }
 
     // factor formulaes taken from:
