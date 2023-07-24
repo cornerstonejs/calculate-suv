@@ -1,9 +1,14 @@
 import { FullDateInterface } from './combineDateTime';
 import { calculateScanTimes } from './calculateScanTimes';
-import calculateSUVlbmScalingFactor from './calculateSUVlbmScalingFactor';
-import { SUVlbmScalingFactorInput } from './calculateSUVlbmScalingFactor';
-import calculateSUVbsaScalingFactor from './calculateSUVbsaScalingFactor';
-import { SUVbsaScalingFactorInput } from './calculateSUVbsaScalingFactor';
+import {
+  calculateSUVlbmJanmahasatianScalingFactor,
+  calculateSUVlbmScalingFactor,
+  SUVlbmScalingFactorInput,
+} from './calculateSUVlbmScalingFactor';
+import {
+  calculateSUVbsaScalingFactor,
+  SUVbsaScalingFactorInput,
+} from './calculateSUVbsaScalingFactor';
 import { calculateStartTime } from './calculateStartTime';
 import { InstanceMetadata } from './types';
 
@@ -16,6 +21,7 @@ import { InstanceMetadata } from './types';
 interface ScalingFactorResult {
   suvbw: number;
   suvlbm?: number;
+  suvlbmJanma?: number;
   suvbsa?: number;
 }
 
@@ -232,6 +238,7 @@ export default function calculateSUVScalingFactors(
 
   // get LBM
   let suvlbmFactor: number | undefined;
+  let suvlbmJenmaFactor: number | undefined;
   if (PatientSize === null || PatientSize === undefined) {
     console.warn(
       'PatientSize value is missing. It is not possible to calculate the SUV lbm factors'
@@ -248,6 +255,7 @@ export default function calculateSUVScalingFactors(
     };
 
     suvlbmFactor = calculateSUVlbmScalingFactor(suvlbmInputs);
+    suvlbmJenmaFactor = calculateSUVlbmJanmahasatianScalingFactor(suvlbmInputs);
   }
 
   return results.map(function(result, index) {
@@ -263,6 +271,10 @@ export default function calculateSUVScalingFactors(
     if (suvlbmFactor) {
       // multiply for LBM
       factors.suvlbm = decayCorrectionArray[index] * suvlbmFactor;
+    }
+
+    if (suvlbmJenmaFactor) {
+      factors.suvlbmJanma = decayCorrectionArray[index] * suvlbmJenmaFactor;
     }
 
     // factor formulaes taken from:

@@ -4,12 +4,12 @@
  * @export
  * @interface SUVbsaScalingFactorInput
  */
-export interface SUVbsaScalingFactorInput {
+interface SUVbsaScalingFactorInput {
   PatientSize: number;
   PatientWeight: number;
 }
 
-export default function calculateSUVbsaScalingFactor(
+function calculateSUVbsaScalingFactor(
   inputs: SUVbsaScalingFactorInput
 ): number {
   const { PatientWeight, PatientSize } = inputs;
@@ -20,4 +20,4 @@ export default function calculateSUVbsaScalingFactor(
   return BSA;
 }
 
-export { calculateSUVbsaScalingFactor };
+export { calculateSUVbsaScalingFactor, SUVbsaScalingFactorInput };
