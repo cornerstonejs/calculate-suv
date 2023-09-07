@@ -147,7 +147,8 @@ export default function calculateSUVScalingFactors(
     );
   }
 
-  if (PatientWeight === null || PatientWeight === undefined) {
+  // Treat null, undefined and zero as a missing PatientWeight.
+  if (!PatientWeight) {
     throw new Error(
       'PatientWeight value is missing. It is not possible to calculate the SUV factors'
     );

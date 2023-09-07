@@ -187,6 +187,16 @@ describe('calculateSUVScalingFactor Error Handling', () => {
     }).toThrowError('Decay time cannot be less than zero');
   });
 
+  it('throws an Error if the PatientWeight is zero', () => {
+    input[0].PatientWeight = 0;
+
+    expect(() => {
+      calculateSUVScalingFactors(input);
+    }).toThrowError(
+      `PatientWeight value is missing. It is not possible to calculate the SUV factors`
+    );
+  });
+
   it('throws an Error if series-level metadata are different', () => {
     expect(() => {
       calculateSUVScalingFactors(multiInput);
