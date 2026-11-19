@@ -11,8 +11,8 @@ import dateTimeToFullDateInterface from './dateTimeToFullDateInterface';
 interface InstanceMetadataForScanTimes {
   SeriesDate: string;
   SeriesTime: string;
-  AcquisitionDate: string;
-  AcquisitionTime: string;
+  AcquisitionDate?: string;
+  AcquisitionTime?: string;
 
   GEPrivatePostInjectionDateTime?: string;
   TimezoneOffsetFromUTC?: string;
@@ -52,8 +52,15 @@ export default function calculateScanTimes(
     `3000-01-01T00:00:00.000000Z`
   );
   let timeError = earliestAcquisitionDateTime.getTimeInSec();
+  let hasAcquisitionDateTime = false;
   instances.forEach(instance => {
     const { AcquisitionDate, AcquisitionTime } = instance;
+
+    // Type 2 in the PET Image Module, so they may be absent or empty
+    if (!AcquisitionDate || !AcquisitionTime) {
+      return;
+    }
+    hasAcquisitionDateTime = true;
 
     const acquisitionDate: DateInterface = parseDA(AcquisitionDate);
     const acquisitionTime: TimeInterface = parseTM(AcquisitionTime);
@@ -72,6 +79,12 @@ export default function calculateScanTimes(
           : earliestAcquisitionDateTime;
     }
   });
+
+  // Without the acquisition's date and time in any instance, the series'
+  // (Type 1 in the PET Series Module)
+  if (!hasAcquisitionDateTime) {
+    return results.fill(seriesDateTime);
+  }
 
   if (earliestAcquisitionDateTime.getTimeInSec() >= timeError) {
     throw new Error('Earliest acquisition time or date could not be parsed.');

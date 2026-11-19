@@ -24,8 +24,8 @@ export interface InstanceMetadata {
   PatientWeight: number;
   SeriesDate: string;
   SeriesTime: string;
-  AcquisitionDate: string;
-  AcquisitionTime: string;
+  AcquisitionDate?: string; // Type 2: may be absent or empty
+  AcquisitionTime?: string;
 
   // Marked as optional but at least either RadiopharmaceuticalStartDateTime
   // or both RadiopharmaceuticalStartTime and SeriesDate are required.

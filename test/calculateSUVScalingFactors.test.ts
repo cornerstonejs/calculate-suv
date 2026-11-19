@@ -273,4 +273,14 @@ describe('calculateSUVScalingFactors scan and injection times', () => {
 
     expect(suvbw).toBeCloseTo(oneHour, 15);
   });
+
+  it('takes an instance without AcquisitionDate and AcquisitionTime', () => {
+    const [{ suvbw }] = calculateSUVScalingFactors([
+      instance({}),
+      instance({ AcquisitionDate: undefined, AcquisitionTime: undefined }),
+      instance({ AcquisitionDate: '', AcquisitionTime: '' }),
+    ]);
+
+    expect(suvbw).toBeCloseTo(oneHour, 15);
+  });
 });

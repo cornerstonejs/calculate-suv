@@ -220,6 +220,54 @@ describe('calculateScanTimes', () => {
       ]);
     });
   });
+
+  describe('when an instance has no AcquisitionDate or AcquisitionTime', () => {
+    it('should take the earliest among the instances that have them', () => {
+      // Arrange: the series is dated after the acquisitions
+      const SeriesDate = '20201127';
+      const SeriesTime = '120000';
+      const instances = [
+        { SeriesDate, SeriesTime },
+        {
+          SeriesDate,
+          SeriesTime,
+          AcquisitionDate: SeriesDate,
+          AcquisitionTime: '113010',
+        },
+        { SeriesDate, SeriesTime, AcquisitionDate: '', AcquisitionTime: '' },
+      ];
+
+      // Act
+      const scanDateTimes = calculateScanTimes(instances);
+
+      // Assert
+      const earliestDateTime = dateTimeToFullDateInterface('20201127113010');
+      scanDateTimes.forEach(scanDateTime => {
+        expect(scanDateTime).toEqual(earliestDateTime);
+      });
+    });
+
+    it('should take the series date and time when no instance has them', () => {
+      // Arrange
+      const SeriesDate = '20201127';
+      const SeriesTime = '113010';
+      const instances = [
+        { SeriesDate, SeriesTime },
+        { SeriesDate, SeriesTime, AcquisitionDate: '', AcquisitionTime: '' },
+      ];
+
+      // Act
+      const scanDateTimes = calculateScanTimes(instances);
+
+      // Assert
+      const seriesDateTime = dateTimeToFullDateInterface(
+        `${SeriesDate}${SeriesTime}`
+      );
+      scanDateTimes.forEach(scanDateTime => {
+        expect(scanDateTime).toEqual(seriesDateTime);
+      });
+    });
+  });
 });
 
 describe('calculateScanTimes Error Handling', () => {
