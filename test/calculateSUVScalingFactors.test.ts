@@ -95,6 +95,85 @@ describe('calculateSUVScalingFactors', () => {
   });
 });
 
+describe('calculateSUVScalingFactors decay correction', () => {
+  // 18F scanned one hour after the injection
+  const instance = (fields: Partial<InstanceMetadata>): InstanceMetadata => ({
+    CorrectedImage: ['ATTN', 'DECY'],
+    Units: 'BQML',
+    RadionuclideHalfLife: 6586.2,
+    RadiopharmaceuticalStartDateTime: '20201023085417',
+    RadionuclideTotalDose: 370e6,
+    DecayCorrection: 'START',
+    PatientWeight: 75,
+    SeriesTime: '095417',
+    SeriesDate: '20201023',
+    AcquisitionTime: '095417',
+    AcquisitionDate: '20201023',
+    ...fields,
+  });
+  const injected = 75000 / 370e6;
+  const decayed = injected * Math.pow(2, 3600 / 6586.2);
+
+  it('decays the dose to the scan start if DecayCorrection is START', () => {
+    const [{ suvbw }] = calculateSUVScalingFactors([instance({})]);
+
+    expect(decayed / injected).toBeCloseTo(1.4606, 4);
+    expect(suvbw).toBeCloseTo(decayed, 15);
+  });
+
+  it('does not decay the dose if DecayCorrection is ADMIN', () => {
+    const [{ suvbw }] = calculateSUVScalingFactors([
+      instance({ DecayCorrection: 'ADMIN' }),
+    ]);
+
+    expect(suvbw).toBeCloseTo(injected, 15);
+  });
+
+  it('does not decay the dose of any instance if DecayCorrection is ADMIN', () => {
+    // The series was created after the scan: the scan time is then the
+    // earliest acquisition time, 09:54:17
+    const factors = calculateSUVScalingFactors([
+      instance({ DecayCorrection: 'ADMIN', SeriesTime: '120000' }),
+      instance({
+        DecayCorrection: 'ADMIN',
+        SeriesTime: '120000',
+        AcquisitionTime: '100417',
+      }),
+    ]);
+
+    expect(factors.length).toEqual(2);
+    factors.forEach(({ suvbw }) => expect(suvbw).toBeCloseTo(injected, 15));
+  });
+
+  it('does not decay the dose of suvbsa and suvlbm if DecayCorrection is ADMIN', () => {
+    const sized = { PatientSex: 'M', PatientSize: 1.85 };
+    const [start] = calculateSUVScalingFactors([instance(sized)]);
+    const [admin] = calculateSUVScalingFactors([
+      instance({ ...sized, DecayCorrection: 'ADMIN' }),
+    ]);
+    const ratio = injected / decayed;
+
+    expect(admin.suvbsa).toBeCloseTo(start.suvbsa! * ratio, 15);
+    expect(admin.suvlbm).toBeCloseTo(start.suvlbm! * ratio, 15);
+    expect(admin.suvlbmJanma).toBeCloseTo(start.suvlbmJanma! * ratio, 15);
+  });
+
+  it('does not decay the dose if DecayCorrection is ADMIN and Units are CNTS (PhilipsPETPrivateGroup SUVScaleFactor not available)', () => {
+    const [{ suvbw }] = calculateSUVScalingFactors([
+      instance({
+        DecayCorrection: 'ADMIN',
+        Units: 'CNTS',
+        PhilipsPETPrivateGroup: {
+          SUVScaleFactor: 0,
+          ActivityConcentrationScaleFactor: 1.602563,
+        },
+      }),
+    ]);
+
+    expect(suvbw).toBeCloseTo(1.602563 * injected, 15);
+  });
+});
+
 describe('calculateSUVScalingFactor Error Handling', () => {
   beforeEach(() => {
     input = [

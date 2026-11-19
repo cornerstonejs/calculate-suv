@@ -26,14 +26,23 @@ interface ScalingFactorResult {
 }
 
 /**
- * The injected dose used to calculate SUV is corrected for the
- * decay that occurs between the time of injection and the start of the scan
+ * Calculates, for each instance, the inverse of the dose that its pixel
+ * values are to be divided by.
+ *
+ * It depends on the time the pixel values are decay corrected to, given by
+ * Decay Correction (0x0054,0x1102):
+ * - START: the start of the scan. The injected dose is corrected for the
+ *   decay that occurs between the time of injection and the start of the scan.
+ * - ADMIN: the time of injection. The injected dose is used as it is.
+ *
+ * Any other value is handled as START.
  *
  * @param {InstanceMetadata[]} instances
- * @returns {number[]}
+ * @returns {number[]} 1 / dose in Bq, for each instance
  */
 function calculateDecayCorrection(instances: InstanceMetadata[]): number[] {
   const {
+    DecayCorrection,
     RadionuclideTotalDose,
     RadionuclideHalfLife,
     RadiopharmaceuticalStartDateTime,
@@ -66,6 +75,11 @@ function calculateDecayCorrection(instances: InstanceMetadata[]): number[] {
       scanTime.getTimeInSec() - startTime.getTimeInSec();
     if (decayTimeInSec < 0) {
       throw new Error('Decay time cannot be less than zero');
+    }
+
+    if (DecayCorrection === 'ADMIN') {
+      // The pixel values are the activity at the time of injection
+      return 1 / RadionuclideTotalDose;
     }
 
     const decayedDose: number =
