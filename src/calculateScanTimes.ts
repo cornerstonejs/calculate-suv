@@ -15,6 +15,7 @@ interface InstanceMetadataForScanTimes {
   AcquisitionTime: string;
 
   GEPrivatePostInjectionDateTime?: string;
+  TimezoneOffsetFromUTC?: string;
 
   // Only used in Siemens case
   RadionuclideHalfLife?: number; // 	RadionuclideHalfLife(0x0018,0x1075)	in	Radiopharmaceutical	Information	Sequence(0x0054,0x0016)
@@ -37,6 +38,7 @@ export default function calculateScanTimes(
     SeriesDate,
     SeriesTime,
     GEPrivatePostInjectionDateTime,
+    TimezoneOffsetFromUTC,
   } = instances[0];
   const results = new Array(instances.length);
   const seriesDate: DateInterface = parseDA(SeriesDate);
@@ -83,7 +85,10 @@ export default function calculateScanTimes(
     if (GEPrivatePostInjectionDateTime) {
       // GE Private scan
       return results.fill(
-        dateTimeToFullDateInterface(GEPrivatePostInjectionDateTime)
+        dateTimeToFullDateInterface(
+          GEPrivatePostInjectionDateTime,
+          TimezoneOffsetFromUTC
+        )
       );
     } else {
       /*const hasValidFrameTimes = instances.every(instance => {

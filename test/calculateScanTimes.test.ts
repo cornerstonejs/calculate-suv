@@ -196,6 +196,29 @@ describe('calculateScanTimes', () => {
         expect(scanDateTime).toEqual(GEDateTime);
       });
     });
+
+    it('should convert one with its offset from UTC to the time zone of TimezoneOffsetFromUTC', () => {
+      // Arrange: 11:30:10 UTC is 12:30:10 at +0100
+      const SeriesDate = '20201127';
+      const instances = [
+        {
+          SeriesDate,
+          SeriesTime: '133010',
+          AcquisitionDate: SeriesDate,
+          AcquisitionTime: '123010',
+          GEPrivatePostInjectionDateTime: '20201127113010+0000',
+          TimezoneOffsetFromUTC: '+0100',
+        },
+      ];
+
+      // Act
+      const scanDateTimes = calculateScanTimes(instances);
+
+      // Assert
+      expect(scanDateTimes).toEqual([
+        dateTimeToFullDateInterface('20201127123010'),
+      ]);
+    });
   });
 });
 

@@ -39,6 +39,7 @@ function calculateDecayCorrection(instances: InstanceMetadata[]): number[] {
     RadiopharmaceuticalStartDateTime,
     RadiopharmaceuticalStartTime,
     SeriesDate,
+    TimezoneOffsetFromUTC,
   } = instances[0];
 
   if (RadionuclideTotalDose === undefined || RadionuclideTotalDose === null) {
@@ -58,6 +59,7 @@ function calculateDecayCorrection(instances: InstanceMetadata[]): number[] {
     RadiopharmaceuticalStartDateTime,
     RadiopharmaceuticalStartTime,
     SeriesDate,
+    TimezoneOffsetFromUTC,
   });
 
   return instances.map((_, index) => {

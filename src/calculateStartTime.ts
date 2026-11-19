@@ -11,6 +11,7 @@ import dateTimeToFullDateInterface from './dateTimeToFullDateInterface';
  *   RadiopharmaceuticalStartDateTime?: string;
  *   RadiopharmaceuticalStartTime?: string;
  *   SeriesDate?: string;
+ *   TimezoneOffsetFromUTC?: string;
  * }} input
  * @returns {FullDateInterface}
  */
@@ -18,17 +19,22 @@ export default function calculateStartTime(input: {
   RadiopharmaceuticalStartDateTime?: string;
   RadiopharmaceuticalStartTime?: string;
   SeriesDate?: string;
+  TimezoneOffsetFromUTC?: string;
 }): FullDateInterface {
   const {
     RadiopharmaceuticalStartDateTime,
     RadiopharmaceuticalStartTime,
     SeriesDate,
+    TimezoneOffsetFromUTC,
   } = input;
 
   let time: TimeInterface;
   let date: DateInterface;
   if (RadiopharmaceuticalStartDateTime) {
-    return dateTimeToFullDateInterface(RadiopharmaceuticalStartDateTime);
+    return dateTimeToFullDateInterface(
+      RadiopharmaceuticalStartDateTime,
+      TimezoneOffsetFromUTC
+    );
   } else if (RadiopharmaceuticalStartTime && SeriesDate) {
     // start Date	is not explicit - assume	same as	Series Date;
     // but consider	spanning midnight
