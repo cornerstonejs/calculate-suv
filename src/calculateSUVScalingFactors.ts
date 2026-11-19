@@ -159,6 +159,11 @@ export default function calculateSUVScalingFactors(
 
   let results: number[] = new Array(instances.length);
   const weightInGrams: number = PatientWeight * 1000;
+  // For each instance, the factor that takes its pixel values to the fraction
+  // of the injected dose per ml. The weight, BSA or LBM times it gives the
+  // SUVbw, SUVbsa or SUVlbm factor. For pixel values in Bq/ml, it is the decay
+  // correction.
+  let doseFractionArray: number[] = decayCorrectionArray;
 
   if (Units === 'BQML') {
     results = decayCorrectionArray.map(function(value) {
@@ -196,18 +201,21 @@ export default function calculateSUVScalingFactors(
         // in the .every loop above.
         instance => instance.PhilipsPETPrivateGroup!.SUVScaleFactor!
       );
+      // The pixel values scale to SUVbw: the fraction of the dose per ml times
+      // the weight
+      doseFractionArray = results.map(result => result / weightInGrams);
     } else if (hasValidActivityConcentrationScaleFactor) {
       // if (0x7053,0x1000) not present, but (0x7053,0x1009) is present, then (0x7053,0x1009) * Rescale Slope,
       // scales pixels to Bq/ml, and proceed as if Units are BQML
-      results = instances.map((instance, index) => {
+      doseFractionArray = instances.map((instance, index) => {
         // Added ! to tell Typescript that this can't be undefined, since we are testing it
         // in the .every loop above.
         return (
           instance.PhilipsPETPrivateGroup!.ActivityConcentrationScaleFactor! *
-          decayCorrectionArray[index] *
-          weightInGrams
+          decayCorrectionArray[index]
         );
       });
+      results = doseFractionArray.map(value => value * weightInGrams);
     } else {
       throw new Error(
         `Units are in CNTS, but PhilipsPETPrivateGroup has invalid values: ${JSON.stringify(
@@ -218,6 +226,7 @@ export default function calculateSUVScalingFactors(
   } else if (Units === 'GML') {
     // assumes that GML indicates SUVbw instead of SUVlbm
     results.fill(1);
+    doseFractionArray = results.map(result => result / weightInGrams);
   } else {
     throw new Error(`Units has an invalid value: ${Units}`);
   }
@@ -266,16 +275,16 @@ export default function calculateSUVScalingFactors(
 
     if (suvbsaFactor) {
       // multiply for BSA
-      factors.suvbsa = decayCorrectionArray[index] * suvbsaFactor;
+      factors.suvbsa = doseFractionArray[index] * suvbsaFactor;
     }
 
     if (suvlbmFactor) {
       // multiply for LBM
-      factors.suvlbm = decayCorrectionArray[index] * suvlbmFactor;
+      factors.suvlbm = doseFractionArray[index] * suvlbmFactor;
     }
 
     if (suvlbmJenmaFactor) {
-      factors.suvlbmJanma = decayCorrectionArray[index] * suvlbmJenmaFactor;
+      factors.suvlbmJanma = doseFractionArray[index] * suvlbmJenmaFactor;
     }
 
     // factor formulaes taken from:

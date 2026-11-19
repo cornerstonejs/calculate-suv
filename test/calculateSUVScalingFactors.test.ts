@@ -1,4 +1,9 @@
 import { calculateSUVScalingFactors } from '../src';
+import { calculateSUVbsaScalingFactor } from '../src/calculateSUVbsaScalingFactor';
+import {
+  calculateSUVlbmJanmahasatianScalingFactor,
+  calculateSUVlbmScalingFactor,
+} from '../src/calculateSUVlbmScalingFactor';
 import { InstanceMetadata } from '../src/types';
 
 let input: InstanceMetadata[];
@@ -81,6 +86,129 @@ describe('calculateSUVScalingFactors', () => {
     expect(calculateSUVScalingFactors(inputPhilips)).toEqual([
       { suvbw: 1602.5629999999999 },
     ]);
+  });
+
+  describe('suvbsa, suvlbm and suvlbmJanma for each of the Units', () => {
+    // 75 kg, 1.80 m, male, scanned one hour after an 18F injection
+    const instance = (fields: Partial<InstanceMetadata>): InstanceMetadata => ({
+      CorrectedImage: ['ATTN', 'DECY'],
+      Units: 'BQML',
+      RadionuclideHalfLife: 6586.2,
+      RadiopharmaceuticalStartDateTime: '20201023085417',
+      RadionuclideTotalDose: 370e6,
+      DecayCorrection: 'START',
+      PatientWeight: 75,
+      PatientSize: 1.8,
+      PatientSex: 'M',
+      SeriesTime: '095417',
+      SeriesDate: '20201023',
+      AcquisitionTime: '095417',
+      AcquisitionDate: '20201023',
+      ...fields,
+    });
+    // For each instance, each factor over suvbw, which is the BSA or LBM over
+    // the weight whatever the units of the pixel values
+    const overSuvbw = (...fields: Partial<InstanceMetadata>[]): number[][] =>
+      calculateSUVScalingFactors(fields.map(instance)).map(factors =>
+        [factors.suvbsa!, factors.suvlbm!, factors.suvlbmJanma!].map(
+          factor => factor / factors.suvbw
+        )
+      );
+    const body = { PatientWeight: 75, PatientSize: 1.8, PatientSex: 'M' };
+    const expected = [
+      calculateSUVbsaScalingFactor(body),
+      calculateSUVlbmScalingFactor(body),
+      calculateSUVlbmJanmahasatianScalingFactor(body),
+    ].map(factor => factor / 75000);
+
+    const expectRatios = (instances: number[][]) => {
+      instances.forEach(ratios => {
+        expect(ratios).toHaveLength(expected.length);
+        ratios.forEach((ratio, index) => {
+          expect(ratio).toBeCloseTo(expected[index], 12);
+        });
+      });
+    };
+
+    it('are the BSA and LBM over the weight times suvbw if Units are BQML', () => {
+      expectRatios(overSuvbw({}));
+    });
+
+    it('are the BSA and LBM over the weight times suvbw if Units are GML', () => {
+      expectRatios(overSuvbw({ Units: 'GML' }));
+    });
+
+    it('are the BSA and LBM over the weight times suvbw if Units are CNTS with SUVScaleFactor', () => {
+      expectRatios(
+        overSuvbw({
+          Units: 'CNTS',
+          PhilipsPETPrivateGroup: {
+            SUVScaleFactor: 0.000551,
+            ActivityConcentrationScaleFactor: undefined,
+          },
+        })
+      );
+    });
+
+    it('are the BSA and LBM over the weight times suvbw if Units are CNTS with ActivityConcentrationScaleFactor', () => {
+      expectRatios(
+        overSuvbw({
+          Units: 'CNTS',
+          PhilipsPETPrivateGroup: {
+            SUVScaleFactor: undefined,
+            ActivityConcentrationScaleFactor: 1.602563,
+          },
+        })
+      );
+    });
+
+    it('are those of the SUVScaleFactor if Units are CNTS with both private factors', () => {
+      const fields = {
+        Units: 'CNTS',
+        PhilipsPETPrivateGroup: {
+          SUVScaleFactor: 0.000551,
+          ActivityConcentrationScaleFactor: 1.602563,
+        },
+      };
+
+      expect(calculateSUVScalingFactors([instance(fields)])[0].suvbw).toEqual(
+        0.000551
+      );
+      expectRatios(overSuvbw(fields));
+    });
+
+    it('are those of each instance if the private factors differ between instances', () => {
+      const withFactors = (
+        name: 'SUVScaleFactor' | 'ActivityConcentrationScaleFactor',
+        values: number[]
+      ): Partial<InstanceMetadata>[] =>
+        values.map(value => ({
+          Units: 'CNTS',
+          PhilipsPETPrivateGroup: {
+            SUVScaleFactor: undefined,
+            ActivityConcentrationScaleFactor: undefined,
+            [name]: value,
+          },
+        }));
+      const suvScaleFactors = withFactors('SUVScaleFactor', [0.000551, 0.0003]);
+      const activityFactors = withFactors('ActivityConcentrationScaleFactor', [
+        1.602563,
+        0.8,
+      ]);
+
+      expect(
+        calculateSUVScalingFactors(suvScaleFactors.map(instance)).map(
+          factors => factors.suvbw
+        )
+      ).toEqual([0.000551, 0.0003]);
+      expectRatios(overSuvbw(...suvScaleFactors));
+
+      const [first, second] = calculateSUVScalingFactors(
+        activityFactors.map(instance)
+      );
+      expect(second.suvbw / first.suvbw).toBeCloseTo(0.8 / 1.602563, 12);
+      expectRatios(overSuvbw(...activityFactors));
+    });
   });
 
   it('calculates suvbsa, suvlbm and suvFactor if weight, size and sex known', () => {
