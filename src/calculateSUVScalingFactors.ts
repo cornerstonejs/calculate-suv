@@ -60,6 +60,9 @@ function calculateDecayCorrection(instances: InstanceMetadata[]): number[] {
     RadiopharmaceuticalStartTime,
     SeriesDate,
     TimezoneOffsetFromUTC,
+    ScanDateTime: scanTimes.reduce((earliest, scanTime) =>
+      scanTime.getTimeInSec() < earliest.getTimeInSec() ? scanTime : earliest
+    ),
   });
 
   return instances.map((_, index) => {

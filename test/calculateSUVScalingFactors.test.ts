@@ -245,4 +245,32 @@ describe('calculateSUVScalingFactors scan and injection times', () => {
 
     expect(suvbw).toBeCloseTo(oneHour, 15);
   });
+
+  it('throws for an injection given by its time alone a few minutes after the scan', () => {
+    // A wrong time, not a scan past midnight: on the day before, the SUV
+    // would be 8600 times too high
+    expect(() => {
+      calculateSUVScalingFactors([
+        instance({
+          RadiopharmaceuticalStartDateTime: undefined,
+          RadiopharmaceuticalStartTime: '095917',
+        }),
+      ]);
+    }).toThrowError('Decay time cannot be less than zero');
+  });
+
+  it('puts an injection given by its time alone, at 23:30, on the day before a scan at 00:30', () => {
+    const [{ suvbw }] = calculateSUVScalingFactors([
+      instance({
+        RadiopharmaceuticalStartDateTime: undefined,
+        RadiopharmaceuticalStartTime: '233000',
+        SeriesDate: '20201024',
+        SeriesTime: '003000',
+        AcquisitionDate: '20201024',
+        AcquisitionTime: '003000',
+      }),
+    ]);
+
+    expect(suvbw).toBeCloseTo(oneHour, 15);
+  });
 });
