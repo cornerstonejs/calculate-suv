@@ -1,4 +1,6 @@
 import combineDateTime, { FullDateInterface } from '../src/combineDateTime';
+import parseDA from '../src/parseDA';
+import parseTM from '../src/parseTM';
 
 describe('combineDateTime', () => {
   it('should properly combine date and time objects into a JS Date', () => {
@@ -20,7 +22,20 @@ describe('combineDateTime', () => {
     const combinedDateTime = combineDateTime(date, time);
 
     // Assert
-    const expected = new FullDateInterface('2020-02-27T09:47:10.120040Z');
+    const expected = new FullDateInterface('2020-02-27T09:47:10.012004Z');
+    expect(combinedDateTime).toEqual(expected);
+  });
+
+  it('should keep a fraction of a second under a tenth as parseTM gives it', () => {
+    // Arrange
+    const date = parseDA('20200227');
+    const time = parseTM('094710.05');
+
+    // Act
+    const combinedDateTime = combineDateTime(date, time);
+
+    // Assert
+    const expected = new FullDateInterface('2020-02-27T09:47:10.050000Z');
     expect(combinedDateTime).toEqual(expected);
   });
 
@@ -64,8 +79,8 @@ describe('combineDateTime', () => {
 
     // Assert
     const expected =
-      dateJS.getTime() / 1000 + 9 * 3600 + 47 * 60 + 10 + 0.12004;
-    expect(timeInSec).toEqual(expected);
+      dateJS.getTime() / 1000 + 9 * 3600 + 47 * 60 + 10 + 0.012004;
+    expect(timeInSec).toBeCloseTo(expected, 6);
   });
 
   it('should properly return the time in sec', () => {
@@ -118,8 +133,8 @@ describe('combineDateTime', () => {
 
     // Assert
     const expected =
-      (dateJS.getTime() / 1000 + 9 * 3600 + 47 * 60 + 10 + 0.12004) * 1e6;
-    expect(timeInMicroSec).toEqual(expected);
+      (dateJS.getTime() / 1000 + 9 * 3600 + 47 * 60 + 10 + 0.012004) * 1e6;
+    expect(timeInMicroSec).toBeCloseTo(expected, 0);
   });
 
   it('should return error for invalid date', () => {
