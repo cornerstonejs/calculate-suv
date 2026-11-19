@@ -196,6 +196,77 @@ describe('calculateScanTimes', () => {
         expect(scanDateTime).toEqual(GEDateTime);
       });
     });
+
+    it('should convert one with its offset from UTC to the time zone of TimezoneOffsetFromUTC', () => {
+      // Arrange: 11:30:10 UTC is 12:30:10 at +0100
+      const SeriesDate = '20201127';
+      const instances = [
+        {
+          SeriesDate,
+          SeriesTime: '133010',
+          AcquisitionDate: SeriesDate,
+          AcquisitionTime: '123010',
+          GEPrivatePostInjectionDateTime: '20201127113010+0000',
+          TimezoneOffsetFromUTC: '+0100',
+        },
+      ];
+
+      // Act
+      const scanDateTimes = calculateScanTimes(instances);
+
+      // Assert
+      expect(scanDateTimes).toEqual([
+        dateTimeToFullDateInterface('20201127123010'),
+      ]);
+    });
+  });
+
+  describe('when an instance has no AcquisitionDate or AcquisitionTime', () => {
+    it('should take the earliest among the instances that have them', () => {
+      // Arrange: the series is dated after the acquisitions
+      const SeriesDate = '20201127';
+      const SeriesTime = '120000';
+      const instances = [
+        { SeriesDate, SeriesTime },
+        {
+          SeriesDate,
+          SeriesTime,
+          AcquisitionDate: SeriesDate,
+          AcquisitionTime: '113010',
+        },
+        { SeriesDate, SeriesTime, AcquisitionDate: '', AcquisitionTime: '' },
+      ];
+
+      // Act
+      const scanDateTimes = calculateScanTimes(instances);
+
+      // Assert
+      const earliestDateTime = dateTimeToFullDateInterface('20201127113010');
+      scanDateTimes.forEach(scanDateTime => {
+        expect(scanDateTime).toEqual(earliestDateTime);
+      });
+    });
+
+    it('should take the series date and time when no instance has them', () => {
+      // Arrange
+      const SeriesDate = '20201127';
+      const SeriesTime = '113010';
+      const instances = [
+        { SeriesDate, SeriesTime },
+        { SeriesDate, SeriesTime, AcquisitionDate: '', AcquisitionTime: '' },
+      ];
+
+      // Act
+      const scanDateTimes = calculateScanTimes(instances);
+
+      // Assert
+      const seriesDateTime = dateTimeToFullDateInterface(
+        `${SeriesDate}${SeriesTime}`
+      );
+      scanDateTimes.forEach(scanDateTime => {
+        expect(scanDateTime).toEqual(seriesDateTime);
+      });
+    });
   });
 });
 

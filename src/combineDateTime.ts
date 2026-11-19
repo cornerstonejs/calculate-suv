@@ -132,10 +132,8 @@ export default function combineDateTime(
   const seconds = `${time.seconds || '00'}`.padStart(2, '0');
   const month = `${date.month}`.padStart(2, '0');
   const day = `${date.day}`.padStart(2, '0');
-  const fractionalSeconds = `${time.fractionalSeconds || '000000'}`.padEnd(
-    6,
-    '0'
-  );
+  // In microseconds, as parseTM gives them: 50000 is 0.05 s
+  const fractionalSeconds = `${time.fractionalSeconds || 0}`.padStart(6, '0');
   const dateString = `${date.year}-${month}-${day}`;
   const timeString = `T${hours}:${minutes}:${seconds}.${fractionalSeconds}Z`;
   const fullDateString = `${dateString}${timeString}`;

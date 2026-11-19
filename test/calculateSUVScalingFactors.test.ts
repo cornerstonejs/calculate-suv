@@ -215,3 +215,72 @@ describe('calculateSUVScalingFactor Error Handling', () => {
     );
   });
 });
+
+describe('calculateSUVScalingFactors scan and injection times', () => {
+  // 18F decay-corrected to the scan start, one hour after the injection
+  const instance = (fields: Partial<InstanceMetadata>): InstanceMetadata => ({
+    CorrectedImage: ['ATTN', 'DECY'],
+    Units: 'BQML',
+    RadionuclideHalfLife: 6586.2,
+    RadiopharmaceuticalStartDateTime: '20201023085417',
+    RadionuclideTotalDose: 370e6,
+    DecayCorrection: 'START',
+    PatientWeight: 75,
+    SeriesTime: '095417',
+    SeriesDate: '20201023',
+    AcquisitionTime: '095417',
+    AcquisitionDate: '20201023',
+    ...fields,
+  });
+  const oneHour = 75000 / (370e6 * Math.pow(2, -3600 / 6586.2));
+
+  it('converts an injection given with its offset from UTC to the time zone of the scan', () => {
+    // 07:54:17 UTC is 08:54:17 at +0100
+    const [{ suvbw }] = calculateSUVScalingFactors([
+      instance({
+        RadiopharmaceuticalStartDateTime: '20201023075417+0000',
+        TimezoneOffsetFromUTC: '+0100',
+      }),
+    ]);
+
+    expect(suvbw).toBeCloseTo(oneHour, 15);
+  });
+
+  it('throws for an injection given by its time alone a few minutes after the scan', () => {
+    // A wrong time, not a scan past midnight: on the day before, the SUV
+    // would be 8600 times too high
+    expect(() => {
+      calculateSUVScalingFactors([
+        instance({
+          RadiopharmaceuticalStartDateTime: undefined,
+          RadiopharmaceuticalStartTime: '095917',
+        }),
+      ]);
+    }).toThrowError('Decay time cannot be less than zero');
+  });
+
+  it('puts an injection given by its time alone, at 23:30, on the day before a scan at 00:30', () => {
+    const [{ suvbw }] = calculateSUVScalingFactors([
+      instance({
+        RadiopharmaceuticalStartDateTime: undefined,
+        RadiopharmaceuticalStartTime: '233000',
+        SeriesDate: '20201024',
+        SeriesTime: '003000',
+        AcquisitionDate: '20201024',
+        AcquisitionTime: '003000',
+      }),
+    ]);
+
+    expect(suvbw).toBeCloseTo(oneHour, 15);
+  });
+
+  it('takes an instance without AcquisitionDate and AcquisitionTime', () => {
+    const [{ suvbw }] = calculateSUVScalingFactors([
+      instance({}),
+      instance({ AcquisitionDate: undefined, AcquisitionTime: undefined }),
+      instance({ AcquisitionDate: '', AcquisitionTime: '' }),
+    ]);
+
+    expect(suvbw).toBeCloseTo(oneHour, 15);
+  });
+});
